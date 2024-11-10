@@ -1,0 +1,98 @@
+export const itens = [
+  {
+    id: 1,
+    title: "Smartphone Android",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "1499,99",
+  },
+  {
+    id: 2,
+    title: "Notebook Gamer",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "5499,90",
+  },
+  {
+    id: 3,
+    title: "Smartwatch Fitness",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "399,90",
+  },
+  {
+    id: 4,
+    title: "Fone de Ouvido Bluetooth",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "199,90",
+  },
+  {
+    id: 5,
+    title: "TV 4K Ultra HD",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "2999,90",
+  },
+  {
+    id: 6,
+    title: "Caixa de Som Portátil",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "149,90",
+  },
+  {
+    id: 7,
+    title: "Câmera Digital",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "1199,90",
+  },
+  {
+    id: 8,
+    title: "Tablet Android",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "799,90",
+  },
+  {
+    id: 9,
+    title: "Mouse Gamer RGB",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "249,90",
+  },
+  {
+    id: 10,
+    title: "Teclado Mecânico",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "399,90",
+  },
+  {
+    id: 11,
+    title: "Monitor LED 27''",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "1499,90",
+  },
+  {
+    id: 12,
+    title: "Roteador Wi-Fi 6",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "299,90",
+  },
+  {
+    id: 13,
+    title: "Cadeira Gamer",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "899,90",
+  },
+  {
+    id: 14,
+    title: "Webcam Full HD",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "249,90",
+  },
+  {
+    id: 15,
+    title: "Controle para Console",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "299,90",
+  },
+  {
+    id: 16,
+    title: "Impressora Multifuncional",
+    url: "https://pechinchou.com.br/_next/image?url=https%3A%2F%2Fdw2kd6nn091d2.cloudfront.net%2Fmedia%2Fimg%2Fproducts%2Ffit-in%2F250x250%2FD_NQ_NP_800323-MLB73508684883_122023-O_1_XqKLuD6_Gf5HQUI_jFm4iVH_ptbDH12_2JqFFY7_J0rQgvC_E1RcfL5_ToPHBY5_LGLRvWc_YVD7P69_IBfFpCT_5DbWf01_nNNABbD_DEOiKDR_PZun3TC.webp&w=1920&q=75",
+    price: "699,90",
+  },
+];
