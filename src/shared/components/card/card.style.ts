@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const ContainerCard = styled.div`
   width: 100%;
@@ -13,14 +13,15 @@ export const ContainerCard = styled.div`
   flex-flow: column nowrap;
   align-items: center;
 
-  flex: 1 1 220px;
-`;
+  flex: 0 1 225px;
+`
 
 export const ImageProduct = styled.img`
   width: 162px;
-  height: 162px;
+  min-height: 162px;
+  max-height: 162px;
   object-fit: contain;
-`;
+`
 
 export const TitleProduct = styled.a`
   text-decoration: none;
@@ -41,7 +42,7 @@ export const TitleProduct = styled.a`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   transition: 0.5s;
-`;
+`
 
 export const ContainerCupom = styled.div`
   height: 30px;
@@ -51,39 +52,39 @@ export const ContainerCupom = styled.div`
   gap: 10px;
   display: flex;
   align-items: center;
-`;
+`
 
 export const CupomProduct = styled.span`
   font-size: 11px;
   font-weight: bold;
 
   color: rgb(154, 161, 166);
-`;
+`
 
 export const CoinText = styled.span`
   font-size: 16px;
   font-weight: 600;
   color: #e0a800;
-`;
+`
 
 export const ValueText = styled.span`
   font-size: 22px;
   font-weight: 700;
   color: #e0a800;
-`;
+`
 
 export const PriceOld = styled.span`
   font-size: 12px;
   text-decoration: line-through;
   color: rgb(130, 136, 140);
-`;
+`
 
 export const StoreText = styled.span`
   font-size: 13px;
   font-weight: 700;
-`;
+`
 
 export const StoreImage = styled.img`
   width: 20px;
   height: 20px;
-`;
+`

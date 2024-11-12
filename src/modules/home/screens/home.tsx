@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Card } from '../../../shared/components/card/card'
-import { Filter } from '../../../shared/components/filter/filter'
 import { FlexContainer } from '../../../shared/components/flexcontainer/flexcontainer.style'
 import Screen from '../../../shared/components/screen/screen'
 import { SearchBar } from '../../../shared/components/search/search'
-import { Spin } from 'antd'
-import { fetchProducts } from '../../../shared/functions/connectionAPI'
 import { convertNumberToMoney } from '../../../shared/functions/money'
 import { useProductReducer } from '../../../store/reducers/productReducer/useProductReducer'
+import { Spin } from 'antd'
+import { fetchProducts } from '../../../shared/functions/connectionAPI'
 
-export const SearchPage = () => {
+const Home = () => {
   const { products, setProducts } = useProductReducer()
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(0)
@@ -62,10 +61,8 @@ export const SearchPage = () => {
         background="#"
         style={{ maxWidth: '1216px' }}
       >
-        <Filter />
         <FlexContainer
           background="#"
-          width="100%"
           gap="15px 0"
           justify="center"
           directionwrap="row wrap"
@@ -74,10 +71,9 @@ export const SearchPage = () => {
           <SearchBar />
           <FlexContainer
             background="#"
-            width="100%"
             gap="15px 10px"
-            directionwrap="row wrap"
             justify="center"
+            directionwrap="row wrap"
           >
             {products.map((item) => (
               <Card
@@ -105,4 +101,4 @@ export const SearchPage = () => {
   )
 }
 
-export default SearchPage
+export default Home

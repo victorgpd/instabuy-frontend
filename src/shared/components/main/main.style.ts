@@ -7,8 +7,10 @@ export const MainContainer = styled.main`
 
   background-color: rgb(242, 245, 247);
 
+  flex: 1;
+
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 `;
