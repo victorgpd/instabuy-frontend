@@ -40,10 +40,17 @@ export const ButtonMenu = styled(Button)`
 export const ButtonUser = styled(Button)`
   color: white;
   background: transparent;
-  border: none;
+  border-radius: 50%;
+  padding: 15px;
 `
 
 export const LinkLogin = styled.a`
   font-size: 14px;
   text-decoration: none;
+`
+
+export const TextName = styled.span`
+  font-size: 14px;
+  color: white;
+  cursor: default;
 `

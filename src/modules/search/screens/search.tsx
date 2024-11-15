@@ -11,8 +11,10 @@ import { useProductReducer } from '../../../store/reducers/productReducer/usePro
 import { useLocation, useNavigate } from 'react-router-dom'
 import { homeRoutesEnum } from '../../home/routes'
 import { LoadingOutlined } from '@ant-design/icons'
+import useTitle from '../../../shared/hooks/useTitle'
 
 export const SearchPage = () => {
+  useTitle('Pesquisar')
   const navigate = useNavigate()
   const { products, setProducts } = useProductReducer()
   const [loading, setLoading] = useState(false)

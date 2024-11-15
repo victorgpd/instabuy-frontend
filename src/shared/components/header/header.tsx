@@ -8,6 +8,7 @@ import {
   LinkLogin,
   LogoHeader,
   NameLogo,
+  TextName,
 } from './header.style'
 import {
   AppstoreOutlined,
@@ -34,13 +35,27 @@ export const Header = (props: HeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(true)
   const [logged, setLogged] = useState(false)
 
-  useEffect(() => {
-    let stateLogged = false
-    const verifiedFunction = async () => {
-      stateLogged = await verified(setUserReducer)
-    }
+  const [currentText, setCurrentText] = useState('')
+  const [index, setIndex] = useState(0)
 
-    setLogged(stateLogged)
+  useEffect(() => {
+    if (userReducer?.name) {
+      const text = `Olá, ${userReducer.name}!`
+      const interval = setInterval(() => {
+        if (index < text.length) {
+          setCurrentText((prev) => prev + text[index])
+          setIndex((prev) => prev + 1)
+        }
+      }, 50)
+      return () => clearInterval(interval)
+    }
+  }, [index, userReducer?.name])
+
+  useEffect(() => {
+    const verifiedFunction = async () => {
+      const isLogged = await verified(setUserReducer)
+      setLogged(isLogged)
+    }
 
     verifiedFunction()
   }, [])
@@ -114,14 +129,23 @@ export const Header = (props: HeaderProps) => {
             align="center"
             gap="10px"
           >
-            {logged === true ? (
-              <Dropdown menu={{ items }} placement="bottom">
-                <span color="white">{userReducer?.name}</span>
-                <ButtonUser
-                  iconPosition="end"
-                  icon={<UserOutlined style={{ fontSize: '20px' }} />}
-                />
-              </Dropdown>
+            {logged ? (
+              <>
+                <TextName>{currentText}</TextName>
+                <Dropdown menu={{ items }} placement="bottom">
+                  <FlexContainer
+                    align="center"
+                    gap="8px"
+                    background="#"
+                    width="32px"
+                  >
+                    <ButtonUser
+                      iconPosition="end"
+                      icon={<UserOutlined style={{ fontSize: '20px' }} />}
+                    />
+                  </FlexContainer>
+                </Dropdown>
+              </>
             ) : (
               <>
                 <LinkLogin
