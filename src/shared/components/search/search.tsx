@@ -1,14 +1,27 @@
-import { Button } from "antd";
-import { FlexContainer } from "../flexcontainer/flexcontainer.style";
-import Search from "antd/es/input/Search";
+import { Button } from 'antd'
+import { FlexContainer } from '../flexcontainer/flexcontainer.style'
+import Search from 'antd/es/input/Search'
 import {
   ArrowDownOutlined,
   ClockCircleOutlined,
   HeartOutlined,
   StarOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons'
+import { useState } from 'react'
+import { searchRoutesEnum } from '../../../modules/search/routes'
 
 export const SearchBar = () => {
+  const [search, setSearch] = useState('')
+
+  const handleSearch = (product: string) => {
+    setSearch(product)
+  }
+
+  const handleSearchSubmit = () => {
+    const searchUrl = `${searchRoutesEnum.SEARCH_URL}?q=${search}`
+    window.location.href = searchUrl
+  }
+
   return (
     <>
       <FlexContainer
@@ -16,9 +29,15 @@ export const SearchBar = () => {
         padding="15px"
         gap="15px"
         directionwrap="column nowrap"
-        style={{ borderRadius: "12px" }}
+        style={{ borderRadius: '12px' }}
       >
-        <Search placeholder="Buscar Produto" size="middle" />
+        <Search
+          onSearch={handleSearchSubmit}
+          onChange={(e) => handleSearch(e.target.value)}
+          value={search}
+          placeholder="Buscar Produto"
+          size="middle"
+        />
         <FlexContainer
           padding="15px 0 0"
           width="100%"
@@ -26,14 +45,14 @@ export const SearchBar = () => {
           directionwrap="row wrap"
           justify="center"
           style={{
-            borderTop: "2px solid rgb(242, 244, 246)",
+            borderTop: '2px solid rgb(242, 244, 246)',
           }}
         >
           <Button
             color="primary"
             variant="outlined"
             icon={<ClockCircleOutlined />}
-            style={{ flex: "1 1 auto" }}
+            style={{ flex: '1 1 auto' }}
           >
             Recentes
           </Button>
@@ -41,12 +60,12 @@ export const SearchBar = () => {
             color="primary"
             variant="outlined"
             icon={<StarOutlined />}
-            style={{ flex: "1 1 auto" }}
+            style={{ flex: '1 1 auto' }}
           >
             Destaques
           </Button>
           <Button
-            style={{ flex: "1 1 auto" }}
+            style={{ flex: '1 1 auto' }}
             color="primary"
             variant="outlined"
             icon={<ArrowDownOutlined />}
@@ -54,7 +73,7 @@ export const SearchBar = () => {
             Menor Preço
           </Button>
           <Button
-            style={{ flex: "1 1 auto" }}
+            style={{ flex: '1 1 auto' }}
             color="primary"
             variant="outlined"
             icon={<HeartOutlined />}
@@ -64,5 +83,5 @@ export const SearchBar = () => {
         </FlexContainer>
       </FlexContainer>
     </>
-  );
-};
+  )
+}

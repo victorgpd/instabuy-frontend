@@ -30,7 +30,7 @@ interface CardProps {
 export const Card = (props: CardProps) => {
   const redirectionFunction = () => {
     if (props.link) {
-      window.location.href = props.link
+      window.open(props.link, '_blank')
     } else {
       console.error('Link inválido ou inexistente.')
     }
@@ -45,7 +45,9 @@ export const Card = (props: CardProps) => {
           align="center"
           gap="25px"
         >
-          <ImageProduct src={props.image} />
+          <a href={props.link} target="_blank" rel="noopener noreferrer">
+            <ImageProduct src={props.image} />
+          </a>
 
           <FlexContainer directionwrap="column nowrap" gap="5px">
             <FlexContainer height="34px">
@@ -57,17 +59,16 @@ export const Card = (props: CardProps) => {
                 {props.title}
               </TitleProduct>
             </FlexContainer>
-            <ContainerCupom>
-              {props.cupom && (
-                <>
-                  <FontAwesomeIcon
-                    icon={faTicket}
-                    style={{ fontSize: '12px', color: '#a15e49' }}
-                  />
-                  <CupomProduct>{props.cupom.toUpperCase()}</CupomProduct>
-                </>
-              )}
-            </ContainerCupom>
+            {props.cupom && (
+              <ContainerCupom>
+                <FontAwesomeIcon
+                  icon={faTicket}
+                  style={{ fontSize: '12px', color: '#a15e49' }}
+                />
+                <CupomProduct>{props.cupom.toUpperCase()}</CupomProduct>
+              </ContainerCupom>
+            )}
+
             <FlexContainer directionwrap="column nowrap">
               <FlexContainer height="26px" gap="8px" align="flex-end">
                 {props.priceOld && <PriceOld>R$ {props.priceOld}</PriceOld>}

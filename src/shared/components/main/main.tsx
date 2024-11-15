@@ -1,7 +1,7 @@
-import { MainContainer } from "./main.style";
+import { MainContainer } from './main.style'
 
 interface MainProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 export const Main = (props: MainProps) => {
@@ -9,5 +9,5 @@ export const Main = (props: MainProps) => {
     <>
       <MainContainer>{props.children}</MainContainer>
     </>
-  );
-};
+  )
+}

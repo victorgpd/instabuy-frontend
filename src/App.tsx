@@ -6,10 +6,11 @@ import {
 import type { Router as RemixRouter } from '@remix-run/router'
 import { searchScreensRoutes } from './modules/search/routes'
 import { homeScreensRoutes } from './modules/home/routes'
-import { insertScreensRoutes } from './modules/insertProduct/routes'
+import { insertScreensRoutes } from './modules/painel/product/insertProduct/routes'
 import { loginScreensRoutes } from './modules/login/routes'
 import { useNotification } from './shared/hooks/useNotification'
 import { verifyLoggedIn } from './shared/functions/auth'
+import { dashboardScreensRoutes } from './modules/painel/dashboard/routes'
 
 function App() {
   const { contextHolder } = useNotification()
@@ -19,12 +20,13 @@ function App() {
     ...searchScreensRoutes,
     ...loginScreensRoutes,
   ]
-  const routesLoggedIn: RouteObject[] = [...insertScreensRoutes].map(
-    (route) => ({
-      ...route,
-      loader: verifyLoggedIn,
-    })
-  )
+  const routesLoggedIn: RouteObject[] = [
+    ...dashboardScreensRoutes,
+    ...insertScreensRoutes,
+  ].map((route) => ({
+    ...route,
+    loader: verifyLoggedIn,
+  }))
 
   const router: RemixRouter = createBrowserRouter([
     ...routes,

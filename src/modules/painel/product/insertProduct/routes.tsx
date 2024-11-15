@@ -2,7 +2,7 @@ import { RouteObject } from 'react-router-dom'
 import InsertProductScreen from './screens/insertProduct'
 
 export enum insertRoutesEnum {
-  INSERT_URL = '/dashboard/insert',
+  INSERT_URL = '/painel/products/insert',
 }
 
 export const insertScreensRoutes: RouteObject[] = [

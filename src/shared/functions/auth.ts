@@ -6,6 +6,9 @@ import {
 } from './storageProxy'
 import axios from 'axios'
 import { AUTHORIZATION_KEY, URL_API_TOKEN } from '../constants'
+import { loginRoutesEnum } from '../../modules/login/routes'
+import { insertRoutesEnum } from '../../modules/painel/product/insertProduct/routes'
+import { UserType } from '../types/UserType'
 
 export const unsetAuthorizationToken = () => {
   removeItemStorage(AUTHORIZATION_KEY)
@@ -22,7 +25,7 @@ export const getAuthorizationToken = () => getItemStorage(AUTHORIZATION_KEY)
 export const verifyLoggedIn = async () => {
   const token = getAuthorizationToken()
   if (!token) {
-    return redirect('/login')
+    return redirect(loginRoutesEnum.LOGIN_URL)
   }
 
   const user = await axios
@@ -34,20 +37,20 @@ export const verifyLoggedIn = async () => {
     })
 
   if (!user) {
-    return redirect('/login')
+    return redirect(loginRoutesEnum.LOGIN_URL)
   }
 
   return null
 }
 
-export const verifyLoggedInLogin = async (navigate: NavigateFunction) => {
+export const verifyLoggedInLogin = async () => {
   const token = getAuthorizationToken()
   if (token) {
     await axios
       .post(URL_API_TOKEN, { accessToken: token })
       .then((response) => {
         if (response.data) {
-          navigate('/dashboard/insert')
+          window.location.href = insertRoutesEnum.INSERT_URL
         }
       })
       .catch((error) => {
@@ -60,7 +63,35 @@ export const verifyLoggedInLogin = async (navigate: NavigateFunction) => {
   return null
 }
 
+export const verified = async (setUserReducer: (user: UserType) => void) => {
+  const token = getAuthorizationToken()
+
+  if (token) {
+    return await axios
+      .post(URL_API_TOKEN, { accessToken: token })
+      .then((response) => {
+        if (response.data) {
+          setUserReducer({
+            name: response.data.name,
+            user: response.data.user,
+            password: '',
+            accessToken: response.data.accessToken,
+            ativo: response.data.ativo,
+          })
+          return true
+        }
+        return false
+      })
+      .catch(() => {
+        unsetAuthorizationToken()
+        return false
+      })
+  }
+
+  return false
+}
+
 export const logout = (navigate: NavigateFunction) => {
   unsetAuthorizationToken()
-  navigate('/login')
+  navigate(loginRoutesEnum.LOGIN_URL)
 }

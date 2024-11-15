@@ -13,6 +13,7 @@ export interface InputInsertProps {
   disabled?: boolean
   status?: statusType
   valueCheck?: boolean
+  flexContainer?: string
   onEnter?: KeyboardEventHandler<HTMLInputElement>
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onChangeCheck?: (e: CheckboxChangeEvent) => void
@@ -24,6 +25,7 @@ export const InputInsert = (props: InputInsertProps) => {
   return (
     <FlexContainer
       width={props.width}
+      flexcontainer={props.flexContainer}
       gap="5px"
       background="#"
       directionwrap="column nowrap"

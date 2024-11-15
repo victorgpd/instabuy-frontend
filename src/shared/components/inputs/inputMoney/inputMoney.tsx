@@ -24,28 +24,31 @@ const InputMoney = (props: InputMoneyProps) => {
   const [currentValue, setCurrentValue] = useState<string>(`${props.value}`)
 
   useEffect(() => {
-    const valueString = `${props.value}`
+    const formattedValue = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(props.value)
 
-    if (!/\D/.test(valueString.replace('.', ''))) {
-      setCurrentValue(props.value.toFixed(2).toString().replace('.', ','))
-    }
+    setCurrentValue(formattedValue)
   }, [props.value])
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const valueWithoutComma = event.target.value.replace(',', '')
-    const sizeSlice = valueWithoutComma.length - 2 // Localiza o ponto decimal
-    const formattedValue = [
-      valueWithoutComma.slice(0, sizeSlice),
-      '.',
-      valueWithoutComma.slice(sizeSlice),
-    ].join('')
+    const valueWithoutComma = event.target.value.replace(/[.,]/g, '')
+
+    const formattedValue = parseFloat(valueWithoutComma) / 100
+    const displayValue = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(formattedValue)
+
+    setCurrentValue(displayValue)
 
     props.onChange({
       ...event,
       target: {
         ...event.target,
         name: props.name,
-        value: formattedValue,
+        value: formattedValue.toString(),
       },
     })
   }

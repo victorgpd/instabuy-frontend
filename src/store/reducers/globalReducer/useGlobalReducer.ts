@@ -1,12 +1,14 @@
 import { useDispatch } from 'react-redux'
-
 import { NotificationEnum } from '../../../shared/types/NotificationType'
 import { useAppSelector } from '../../hooks'
-import { setNotificationAction } from './index'
+import { setNotificationAction, setUserAction } from './index'
+import { UserType } from '../../../shared/types/UserType'
 
 export const useGlobalReducer = () => {
   const dispatch = useDispatch()
-  const { notification } = useAppSelector((state) => state.globalReducer)
+  const { notification, userReducer } = useAppSelector(
+    (state) => state.globalReducer
+  )
 
   const setNotification = (
     message: string,
@@ -22,8 +24,14 @@ export const useGlobalReducer = () => {
     )
   }
 
+  const setUserReducer = (user: UserType) => {
+    dispatch(setUserAction(user))
+  }
+
   return {
     notification,
+    userReducer,
     setNotification,
+    setUserReducer,
   }
 }

@@ -1,20 +1,19 @@
 import { Button, CheckboxProps, Space } from 'antd'
-import { FlexContainer } from '../../../shared/components/flexcontainer/flexcontainer.style'
-import Screen from '../../../shared/components/screen/screen'
-import {
-  CloseCircleOutlined,
-  SaveFilled,
-  SearchOutlined,
-} from '@ant-design/icons'
-import { InputInsert } from '../../../shared/components/inputs/inputInsert/inputInsert'
+import { FlexContainer } from '../../../../../shared/components/flexcontainer/flexcontainer.style'
+import Screen from '../../../../../shared/components/screen/screen'
+import { SaveFilled, SearchOutlined } from '@ant-design/icons'
+import { InputInsert } from '../../../../../shared/components/inputs/inputInsert/inputInsert'
 import { useEffect, useState } from 'react'
-import { statusType } from '../../../shared/components/inputs/inputInsert/inputInsert'
+import { statusType } from '../../../../../shared/components/inputs/inputInsert/inputInsert'
 import axios from 'axios'
-import { ProductType } from '../../../shared/types/ProductType'
-import { useGlobalReducer } from '../../../store/reducers/globalReducer/useGlobalReducer'
-import InputMoney from '../../../shared/components/inputs/inputMoney/inputMoney'
+import { ProductType } from '../../../../../shared/types/ProductType'
+import { useGlobalReducer } from '../../../../../store/reducers/globalReducer/useGlobalReducer'
+import InputMoney from '../../../../../shared/components/inputs/inputMoney/inputMoney'
+import Menu from '../../../../../shared/components/menu/menu'
+import useTitle from '../../../../../shared/hooks/useTitle'
 
 const InsertProductScreen = () => {
+  useTitle('Inserir Produto')
   const [product, setProduct] = useState<ProductType>({
     id: '',
     category: '',
@@ -30,6 +29,7 @@ const InsertProductScreen = () => {
 
   const { setNotification } = useGlobalReducer()
 
+  const [display, setDisplay] = useState('none')
   const [loading, setLoading] = useState(false)
   const [loadingInsert, setLoadingInsert] = useState(false)
   const [disabledButton, setDisabledButton] = useState(true)
@@ -63,16 +63,26 @@ const InsertProductScreen = () => {
       (key) => product[key as keyof ProductType] === ''
     )
 
-    if (!isChecked.cupom) {
-      emptyFields = emptyFields.filter((field) => field !== 'cupom')
+    if (!isChecked.cupom && product.cupom) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        cupom: '',
+      }))
     } else if (isChecked.cupom && !product.cupom) {
       emptyFields.push('priceOld')
+    } else if (!isChecked.cupom) {
+      emptyFields = emptyFields.filter((field) => field !== 'cupom')
     }
 
-    if (!isChecked.priceOld) {
-      emptyFields = emptyFields.filter((field) => field !== 'priceOld')
-    } else if (isChecked.priceOld && product.priceOld <= 0) {
+    if (!isChecked.priceOld && product.priceOld > 0) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        priceOld: 0,
+      }))
+    } else if (isChecked.priceOld && product.priceOld == 0) {
       emptyFields.push('priceOld')
+    } else if (!isChecked.priceOld) {
+      emptyFields = emptyFields.filter((field) => field !== 'priceOld')
     }
 
     if (product.price <= 0) {
@@ -202,8 +212,9 @@ const InsertProductScreen = () => {
   }
 
   return (
-    <>
-      <Screen>
+    <Screen stateMenu={display} setStateMenu={setDisplay}>
+      <Menu display={display} openDefault="products" currentKey="product2" />
+      <FlexContainer background="#" justify="center">
         <FlexContainer
           background="#"
           padding="40px 20px"
@@ -212,15 +223,22 @@ const InsertProductScreen = () => {
           directionwrap="column nowrap"
           gap="15px"
           justify="center"
-          style={{ maxWidth: '500px', minHeight: '400px' }}
+          style={{ maxWidth: '500px' }}
         >
           <FlexContainer
             background="#"
             gap="15px"
             directionwrap="column nowrap"
           >
-            <FlexContainer gap="5px" background="#" align="center">
-              <Space.Compact style={{ width: '45%', alignItems: 'flex-end' }}>
+            <FlexContainer
+              gap="5px"
+              background="#"
+              align="center"
+              directionwrap="row wrap"
+            >
+              <Space.Compact
+                style={{ flex: '1 1 197.5px', alignItems: 'flex-end' }}
+              >
                 <InputInsert
                   name="id"
                   status={statusId}
@@ -233,14 +251,14 @@ const InsertProductScreen = () => {
                 <Button
                   type="primary"
                   icon={<SearchOutlined />}
-                  onClick={() => handleSearch(product.id)} // Chama a busca ao clicar
+                  onClick={() => handleSearch(product.id)}
                   loading={loading}
                 />
               </Space.Compact>
               <InputInsert
+                flexContainer="1 1 244.5px"
                 focus={focusedInput === 2}
                 name="category"
-                width="55%"
                 onChange={(e) => handleInputChange(e)}
                 title="Categoria do Produto"
                 value={product.category}
@@ -323,13 +341,10 @@ const InsertProductScreen = () => {
             >
               Inserir Produto
             </Button>
-            <Button type="default" icon={<CloseCircleOutlined />}>
-              Cancelar
-            </Button>
           </FlexContainer>
         </FlexContainer>
-      </Screen>
-    </>
+      </FlexContainer>
+    </Screen>
   )
 }
 
