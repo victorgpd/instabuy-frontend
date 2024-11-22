@@ -5,14 +5,13 @@ import {
   ButtonMenu,
   ButtonUser,
   HeaderContainer,
-  LinkLogin,
   LogoHeader,
   NameLogo,
-  TextName,
 } from './header.style'
 import {
   AppstoreOutlined,
   CloseOutlined,
+  LoginOutlined,
   LogoutOutlined,
   MenuOutlined,
   SettingOutlined,
@@ -23,6 +22,7 @@ import { useGlobalReducer } from '../../../store/reducers/globalReducer/useGloba
 import { useNavigate } from 'react-router-dom'
 import { unsetAuthorizationToken, verified } from '../../functions/auth'
 import { loginRoutesEnum } from '../../../modules/login/routes'
+import Nav from '../nav/nav'
 
 interface HeaderProps {
   stateMenu?: string
@@ -34,22 +34,6 @@ export const Header = (props: HeaderProps) => {
   const { userReducer, setUserReducer } = useGlobalReducer()
   const [menuOpen, setMenuOpen] = useState(true)
   const [logged, setLogged] = useState(false)
-
-  const [currentText, setCurrentText] = useState('')
-  const [index, setIndex] = useState(0)
-
-  useEffect(() => {
-    if (userReducer?.name) {
-      const text = `Olá, ${userReducer.name}!`
-      const interval = setInterval(() => {
-        if (index < text.length) {
-          setCurrentText((prev) => prev + text[index])
-          setIndex((prev) => prev + 1)
-        }
-      }, 50)
-      return () => clearInterval(interval)
-    }
-  }, [index, userReducer?.name])
 
   useEffect(() => {
     const verifiedFunction = async () => {
@@ -74,27 +58,59 @@ export const Header = (props: HeaderProps) => {
   const logout = () => {
     unsetAuthorizationToken()
     setLogged(false)
-    navigate(loginRoutesEnum.LOGIN_URL)
+    window.location.reload()
   }
 
-  const items: MenuProps['items'] = [
+  const items1: MenuProps['items'] = [
     {
       key: '1',
+      label: (
+        <span
+          style={{ color: '#1677ff', fontSize: '26px' }}
+        >{`Olá, ${userReducer?.name}!`}</span>
+      ),
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: '2',
       icon: <AppstoreOutlined />,
       label: <span>Painel</span>,
       onClick: () => navigate('/painel/dashboard'),
     },
     {
-      key: '2',
+      key: '3',
       icon: <SettingOutlined />,
       label: <span>Configurações</span>,
     },
-
     {
-      key: '3',
+      type: 'divider',
+    },
+    {
+      key: '4',
       icon: <LogoutOutlined />,
       label: <span>Sair</span>,
       onClick: logout,
+    },
+  ]
+
+  const items2: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <span style={{ fontSize: '18px' }}>Olá, seja bem-vindo!</span>,
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: '2',
+      label: 'Login',
+      icon: <LoginOutlined />,
+      onClick: () =>
+        navigate(
+          `${loginRoutesEnum.LOGIN_URL}?from=${encodeURIComponent(location.pathname)}`
+        ),
     },
   ]
 
@@ -110,6 +126,7 @@ export const Header = (props: HeaderProps) => {
           width="100%"
           align="center"
           justify="space-between"
+          gap="20px"
         >
           <FlexContainer background="#" height="50px" align="center" gap="10px">
             {props.stateMenu && (
@@ -129,10 +146,10 @@ export const Header = (props: HeaderProps) => {
             align="center"
             gap="10px"
           >
+            <Nav media="500px" maxmin="max" />
             {logged ? (
               <>
-                <TextName>{currentText}</TextName>
-                <Dropdown menu={{ items }} placement="bottom">
+                <Dropdown menu={{ items: items1 }} placement="bottom">
                   <FlexContainer
                     align="center"
                     gap="8px"
@@ -148,18 +165,25 @@ export const Header = (props: HeaderProps) => {
               </>
             ) : (
               <>
-                <LinkLogin
-                  href={loginRoutesEnum.LOGIN_URL}
-                  style={{ color: 'white', fontSize: '14px' }}
-                >
-                  Login
-                </LinkLogin>
-                <UserOutlined style={{ color: 'white', fontSize: '20px' }} />
+                <Dropdown menu={{ items: items2 }} placement="bottom">
+                  <FlexContainer
+                    align="center"
+                    gap="8px"
+                    background="#"
+                    width="32px"
+                  >
+                    <ButtonUser
+                      iconPosition="end"
+                      icon={<UserOutlined style={{ fontSize: '20px' }} />}
+                    />
+                  </FlexContainer>
+                </Dropdown>
               </>
             )}
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>
+      <Nav media="501px" maxmin="min" />
     </HeaderContainer>
   )
 }

@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 export const ContainerCard = styled.div`
-  width: 100%;
-  height: 382px;
+  height: 362px;
   border-radius: 9px;
   overflow: hidden;
 
@@ -18,8 +17,8 @@ export const ContainerCard = styled.div`
 
 export const ImageProduct = styled.img`
   width: 162px;
-  min-height: 162px;
-  max-height: 162px;
+  min-height: 148px;
+  max-height: 148px;
   object-fit: contain;
 `
 
@@ -69,7 +68,7 @@ export const CoinText = styled.span`
 
 export const ValueText = styled.span`
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 600;
   color: #e0a800;
 `
 

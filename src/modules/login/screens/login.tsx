@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  getAuthorizationToken,
   setAuthorizationToken,
   verifyLoggedInLogin,
 } from '../../../shared/functions/auth'
@@ -17,10 +16,13 @@ import axios from 'axios'
 import { URL_API_USER } from '../../../shared/constants'
 import { UserType } from '../../../shared/types/UserType'
 import { useGlobalReducer } from '../../../store/reducers/globalReducer/useGlobalReducer'
-import { insertRoutesEnum } from '../../painel/product/insertProduct/routes'
 import useTitle from '../../../shared/hooks/useTitle'
+import { useSearchParams } from 'react-router-dom'
 
 const Login = () => {
+  const [searchParams] = useSearchParams()
+  const redirectPath = searchParams.get('from') || '/'
+
   const { setNotification, setUserReducer } = useGlobalReducer()
   const [user, setUser] = useState({
     username: '',
@@ -69,7 +71,7 @@ const Login = () => {
             accessToken: data.accessToken,
             ativo: data.ativo,
           })
-          window.location.href = insertRoutesEnum.INSERT_URL
+          window.location.href = redirectPath
         }
       })
       .catch(() => {
@@ -110,7 +112,7 @@ const Login = () => {
           >
             <InputInsert
               name="username"
-              title="Nome de usuário"
+              title="E-mail"
               value={user.username}
               onChange={(e) => handleInputChange(e)}
               onEnter={handleEnterPress}

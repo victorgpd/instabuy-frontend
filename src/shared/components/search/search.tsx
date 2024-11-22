@@ -10,7 +10,11 @@ import {
 import { useState } from 'react'
 import { searchRoutesEnum } from '../../../modules/search/routes'
 
-export const SearchBar = () => {
+interface SearchBarProps {
+  addbuttons?: boolean
+}
+
+export const SearchBar = (props: SearchBarProps) => {
   const [search, setSearch] = useState('')
 
   const handleSearch = (product: string) => {
@@ -38,7 +42,7 @@ export const SearchBar = () => {
           placeholder="Buscar Produto"
           size="middle"
         />
-        <FlexContainer
+        {props.addbuttons && <FlexContainer
           padding="15px 0 0"
           width="100%"
           gap="15px"
@@ -80,7 +84,7 @@ export const SearchBar = () => {
           >
             Favoritos
           </Button>
-        </FlexContainer>
+        </FlexContainer>}
       </FlexContainer>
     </>
   )

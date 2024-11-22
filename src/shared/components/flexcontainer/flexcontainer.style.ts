@@ -2,10 +2,11 @@ import styled from 'styled-components'
 
 interface FlexContainerProps {
   width?: string
-  maxWidthContainer?: string
+  maxwidthcontainer?: string
   height?: string
   padding?: string
   background?: string
+  overflow?: string
 
   flexcontainer?: string
   gap?: string
@@ -22,11 +23,12 @@ interface FlexContainerProps {
 
 export const FlexContainer = styled.div<FlexContainerProps>`
   width: ${(props) => props.width || '100%'};
-  ${(props) => `max-width: ${props.width};`}
+  ${(props) => `max-width: ${props.maxwidthcontainer};`}
   height: ${(props) => props.height || '100%'};
   padding: ${(props) => props.padding || '0px'};
-  background-color: ${(props) => props.background || 'white'};
+  background: ${(props) => props.background || 'white'};
 
+  ${(props) => `overflow: ${props.overflow};`}
   gap: ${(props) => props.gap || '0px'};
 
   ${(props) => `flex: ${props.flexcontainer};`}
@@ -38,12 +40,13 @@ export const FlexContainer = styled.div<FlexContainerProps>`
 
 interface FlexResponsiveProps extends FlexContainerProps {
   media: string
+  maxmin: string
 }
 
 export const FlexContainerResponsive = styled(
   FlexContainer
 )<FlexResponsiveProps>`
-  @media screen and (max-width: ${(props) => props.media}) {
+  @media screen and (${(props) => props.maxmin}-width: ${(props) => props.media}) {
     display: none;
   }
 `

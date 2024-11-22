@@ -2,7 +2,7 @@ import Header from '../header/header'
 import { Main } from '../main/main'
 
 interface ScreenProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   stateMenu?: string
   setStateMenu?: React.Dispatch<React.SetStateAction<string>>
 }

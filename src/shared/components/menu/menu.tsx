@@ -1,29 +1,34 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
+  LogoutOutlined,
   PieChartOutlined,
+  SettingOutlined,
   ShoppingCartOutlined,
   TagsOutlined,
 } from '@ant-design/icons'
-import type { MenuProps as MenuPropsAntd, MenuTheme } from 'antd'
-import { Menu as MenuAntd, Switch } from 'antd'
+import type { MenuProps as MenuPropsAntd } from 'antd'
+import { Switch } from 'antd'
 import { FlexContainer } from '../flexcontainer/flexcontainer.style'
 import { NavContainer } from '../main/main.style'
 import { useNavigate } from 'react-router-dom'
 import { insertRoutesEnum } from '../../../modules/painel/product/insertProduct/routes'
 import { dashboardRoutesEnum } from '../../../modules/painel/dashboard/routes'
+import { registeredProductsRoutesEnum } from '../../../modules/painel/product/registeredProducts/routes'
+import { StyledMenuDark, StyledMenuLight } from './menu.style'
+import { useGlobalReducer } from '../../../store/reducers/globalReducer/useGlobalReducer'
+import { searchNewProductRoutesEnum } from '../../../modules/painel/product/searchNewProduct/routes'
 
 type MenuItem = Required<MenuPropsAntd>['items'][number]
 
 interface MenuProps {
-  openDefault: string
   currentKey: string
   display: string
 }
 
 const Menu = (props: MenuProps) => {
   const navigate = useNavigate()
-  const [theme, setTheme] = useState<MenuTheme>('dark')
-  const [themeColor, setThemeColor] = useState('#001529')
+  const { themeReducer, setThemeReducer } = useGlobalReducer()
+  const [themeColor, setThemeColor] = useState('#1d1d1d')
   const [current, setCurrent] = useState(props.currentKey)
 
   const items: MenuItem[] = [
@@ -38,7 +43,12 @@ const Menu = (props: MenuProps) => {
       label: 'Produtos',
       icon: <ShoppingCartOutlined />,
       children: [
-        { key: 'product1', label: 'Produtos cadastrados' },
+        {
+          key: 'product1',
+          label: 'Produtos cadastrados',
+          onClick: () =>
+            navigate(registeredProductsRoutesEnum.REGISTERED_PRODUCT_URL),
+        },
         {
           key: 'product2',
           label: 'Cadastrar novo produto',
@@ -47,7 +57,8 @@ const Menu = (props: MenuProps) => {
         {
           key: 'product3',
           label: 'Buscar novos produtos',
-          onClick: () => navigate(insertRoutesEnum.INSERT_URL),
+          onClick: () =>
+            navigate(searchNewProductRoutesEnum.SEARCH_NEW_PRODUCT_URL),
         },
       ],
     },
@@ -60,15 +71,32 @@ const Menu = (props: MenuProps) => {
         { key: 'category2', label: 'Cadastrar nova categoria' },
       ],
     },
+    {
+      key: 'configuration',
+      label: 'Configurações',
+      icon: <SettingOutlined />,
+    },
+    {
+      key: 'logout',
+      label: 'Sair',
+      icon: <LogoutOutlined />,
+    },
   ]
 
-  const changeTheme = (value: boolean) => {
-    setTheme(value ? 'dark' : 'light')
-    if (value == true) {
-      setThemeColor('#001529')
+  useEffect(() => {
+    verifiedTheme()
+  }, [themeReducer])
+
+  const verifiedTheme = () => {
+    if (themeReducer == 'dark') {
+      setThemeColor('#1d1d1d')
     } else {
       setThemeColor('#FFFFFF')
     }
+  }
+
+  const changeTheme = (value: boolean) => {
+    setThemeReducer(value ? 'dark' : 'light')
   }
 
   const onClick: MenuPropsAntd['onClick'] = (e) => {
@@ -85,6 +113,7 @@ const Menu = (props: MenuProps) => {
       <FlexContainer
         directionwrap="column nowrap"
         background="transparent"
+        gap="10px"
         padding="15px 0"
       >
         <FlexContainer
@@ -94,21 +123,29 @@ const Menu = (props: MenuProps) => {
           justify="flex-end"
         >
           <Switch
-            checked={theme === 'dark'}
+            checked={themeReducer === 'dark'}
             onChange={changeTheme}
             checkedChildren="Dark"
             unCheckedChildren="Light"
           />
         </FlexContainer>
-        <MenuAntd
-          theme={theme}
-          onClick={onClick}
-          style={{ width: '256px', height: '100%' }}
-          defaultOpenKeys={[props.openDefault]}
-          selectedKeys={[current]}
-          mode="inline"
-          items={items}
-        />
+        {themeReducer == 'dark' ? (
+          <StyledMenuDark
+            theme={themeReducer}
+            onClick={onClick}
+            style={{ width: '256px', height: '100%' }}
+            selectedKeys={[current]}
+            items={items}
+          />
+        ) : (
+          <StyledMenuLight
+            theme={themeReducer}
+            onClick={onClick}
+            style={{ width: '256px', height: '100%' }}
+            selectedKeys={[current]}
+            items={items}
+          />
+        )}
       </FlexContainer>
     </NavContainer>
   )

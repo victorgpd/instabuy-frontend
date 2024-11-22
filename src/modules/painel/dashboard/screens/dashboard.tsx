@@ -9,7 +9,7 @@ const Dashboard = () => {
 
   return (
     <Screen stateMenu={display} setStateMenu={setDisplay}>
-      <Menu display={display} openDefault="dashboard" currentKey="dashboard" />
+      <Menu display={display} currentKey="dashboard" />
     </Screen>
   )
 }

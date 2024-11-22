@@ -3,15 +3,15 @@ import styled from 'styled-components'
 
 export const HeaderContainer = styled.header`
   width: 100%;
-  height: 65px;
   padding: 7px 15px;
   z-index: 999;
 
-  background: #001529;
+  background: #1d1d1d;
+  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(222, 224, 224, 0.5);
 
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
 `
@@ -47,10 +47,4 @@ export const ButtonUser = styled(Button)`
 export const LinkLogin = styled.a`
   font-size: 14px;
   text-decoration: none;
-`
-
-export const TextName = styled.span`
-  font-size: 14px;
-  color: white;
-  cursor: default;
 `

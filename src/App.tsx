@@ -11,6 +11,8 @@ import { loginScreensRoutes } from './modules/login/routes'
 import { useNotification } from './shared/hooks/useNotification'
 import { verifyLoggedIn } from './shared/functions/auth'
 import { dashboardScreensRoutes } from './modules/painel/dashboard/routes'
+import { registeredProductsScreensRoutes } from './modules/painel/product/registeredProducts/routes'
+import { searchNewProductsScreensRoutes } from './modules/painel/product/searchNewProduct/routes'
 
 function App() {
   const { contextHolder } = useNotification()
@@ -22,7 +24,9 @@ function App() {
   ]
   const routesLoggedIn: RouteObject[] = [
     ...dashboardScreensRoutes,
+    ...registeredProductsScreensRoutes,
     ...insertScreensRoutes,
+    ...searchNewProductsScreensRoutes,
   ].map((route) => ({
     ...route,
     loader: verifyLoggedIn,

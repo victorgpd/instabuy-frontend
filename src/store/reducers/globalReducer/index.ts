@@ -5,6 +5,7 @@ import { UserType } from '../../../shared/types/UserType'
 interface GlobalState {
   notification?: NotificationType
   userReducer?: UserType
+  themeReducer?: 'light' | 'dark'
 }
 
 const initialState: GlobalState = {
@@ -16,9 +17,10 @@ const initialState: GlobalState = {
     accessToken: '',
     ativo: 'false',
   },
+  themeReducer: 'dark',
 }
 
-export const counterSlice = createSlice({
+export const globalSlice = createSlice({
   name: 'globalReducer',
   initialState,
   reducers: {
@@ -28,8 +30,12 @@ export const counterSlice = createSlice({
     setUserAction: (state, action: PayloadAction<UserType>) => {
       state.userReducer = action.payload
     },
+    setThemeAction: (state, action: PayloadAction<'light' | 'dark'>) => {
+      state.themeReducer = action.payload
+    },
   },
 })
 
-export const { setNotificationAction, setUserAction } = counterSlice.actions
-export default counterSlice.reducer
+export const { setNotificationAction, setUserAction, setThemeAction } =
+  globalSlice.actions
+export default globalSlice.reducer

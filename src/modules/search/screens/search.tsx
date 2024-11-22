@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { homeRoutesEnum } from '../../home/routes'
 import { LoadingOutlined } from '@ant-design/icons'
 import useTitle from '../../../shared/hooks/useTitle'
+import NoResults from '../../../shared/components/noresults/noresults'
 
 export const SearchPage = () => {
   useTitle('Pesquisar')
@@ -100,19 +101,24 @@ export const SearchPage = () => {
               directionwrap="row wrap"
               justify="center"
             >
-              {products.map((item) => (
-                <Card
-                  key={item.id}
-                  title={item.name}
-                  image={item.image}
-                  store={item.store}
-                  link={item.linkAffiliate}
-                  price={convertNumberToMoney(item.price)}
-                  priceOld={convertNumberToMoney(item.priceOld)}
-                  cupom="ESPECIAL40"
-                  storeImage="src/images/mercadolivre.png"
-                />
-              ))}
+              {products.length == 0 ? (
+                <NoResults />
+              ) : (
+                products.map((item) => (
+                  <Card
+                    key={item.id}
+                    title={item.name}
+                    image={item.image}
+                    store={item.store}
+                    link={item.linkAffiliate}
+                    price={convertNumberToMoney(item.price)}
+                    priceOld={convertNumberToMoney(item.priceOld)}
+                    cupom="ESPECIAL40"
+                    storeImage="src/images/mercadolivre.png"
+                  />
+                ))
+              )}
+
               <FlexContainer
                 id="sentinela"
                 width="100%"

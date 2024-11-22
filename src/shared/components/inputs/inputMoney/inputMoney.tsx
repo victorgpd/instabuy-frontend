@@ -13,6 +13,7 @@ export interface InputMoneyProps {
   disabled?: boolean
   status?: statusType
   valueCheck?: boolean
+  flexContainer?: string
   onEnter?: KeyboardEventHandler<HTMLInputElement>
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onChangeCheck?: (e: CheckboxChangeEvent) => void
@@ -55,6 +56,7 @@ const InputMoney = (props: InputMoneyProps) => {
 
   return (
     <FlexContainer
+      flexcontainer={props.flexContainer}
       width={props.width}
       gap="5px"
       background="#"

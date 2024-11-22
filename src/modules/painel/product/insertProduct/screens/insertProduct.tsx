@@ -1,4 +1,5 @@
-import { Button, CheckboxProps, Space } from 'antd'
+import { Button, Checkbox, CheckboxProps, Select, Space } from 'antd'
+import type { SelectProps } from 'antd'
 import { FlexContainer } from '../../../../../shared/components/flexcontainer/flexcontainer.style'
 import Screen from '../../../../../shared/components/screen/screen'
 import { SaveFilled, SearchOutlined } from '@ant-design/icons'
@@ -11,9 +12,18 @@ import { useGlobalReducer } from '../../../../../store/reducers/globalReducer/us
 import InputMoney from '../../../../../shared/components/inputs/inputMoney/inputMoney'
 import Menu from '../../../../../shared/components/menu/menu'
 import useTitle from '../../../../../shared/hooks/useTitle'
+import { useLocation } from 'react-router-dom'
+import { searchNewProductRoutesEnum } from '../../searchNewProduct/routes'
+import { useCategoriesReducer } from '../../../../../store/reducers/categoriesReducer/useCategoryReducer'
 
 const InsertProductScreen = () => {
   useTitle('Inserir Produto')
+
+  const [options, setOptions] = useState<SelectProps['options']>([])
+  const { categories, searchCategories, subCategories, searchSubCategories } =
+    useCategoriesReducer()
+
+  const location = useLocation()
   const [product, setProduct] = useState<ProductType>({
     id: '',
     category: '',
@@ -26,6 +36,22 @@ const InsertProductScreen = () => {
     priceOld: 0.0,
     price: 0.0,
   })
+
+  const { productSelected = [] } = location.state || {}
+
+  const formatToNumber = (value: string | undefined): number => {
+    if (!value) return 0
+
+    const cleanedValue = value
+      .replace('R$', '')
+      .replace(/\./g, '')
+      .replace(',', '.')
+      .trim()
+
+    const numberValue = parseFloat(cleanedValue)
+
+    return isNaN(numberValue) ? 0 : numberValue
+  }
 
   const { setNotification } = useGlobalReducer()
 
@@ -56,7 +82,41 @@ const InsertProductScreen = () => {
   const [isChecked, setIsChecked] = useState({
     cupom: false,
     priceOld: false,
+    category: false,
   })
+
+  useEffect(() => {
+    if (productSelected.length > 0) {
+      for (let productSelect of productSelected) {
+        if (formatToNumber(productSelect.priceOld) != 0) {
+          setIsChecked((prevChecked) => ({
+            ...prevChecked,
+            priceOld: true,
+          }))
+        }
+
+        if (productSelect.cupom != '') {
+          setIsChecked((prevChecked) => ({
+            ...prevChecked,
+            cupom: true,
+          }))
+        }
+
+        setProduct({
+          id: productSelect.id,
+          category: productSelect.category,
+          store: 'Mercado Livre',
+          name: productSelect.name,
+          image: productSelect.image,
+          price: formatToNumber(productSelect.price),
+          priceOld: formatToNumber(productSelect.priceOld),
+          cupom: productSelect.cupom,
+          linkOriginal: productSelect.linkOriginal,
+          linkAffiliate: productSelect.linkAffiliate,
+        })
+      }
+    }
+  }, [productSelected])
 
   useEffect(() => {
     let emptyFields = Object.keys(product).filter(
@@ -101,15 +161,32 @@ const InsertProductScreen = () => {
       ...prev,
       disabledCupom: !isChecked.cupom,
       disabledPriceOld: !isChecked.priceOld,
+      disabledCategory: !isChecked.category,
     }))
   }, [isChecked])
 
+  useEffect(() => {
+    searchCategories()
+    searchSubCategories()
+  }, [])
+
+  useEffect(() => {
+    const updatedOptions = categories.map((category) => ({
+      label: category.name,
+      value: category.id,
+    }))
+    setOptions(updatedOptions)
+  }, [categories])
+
   const handleCheckboxChange: CheckboxProps['onChange'] = (e) => {
     const { name, checked } = e.target
-    setIsChecked((prevChecked) => ({
-      ...prevChecked,
-      [name]: checked,
-    }))
+
+    if (name) {
+      setIsChecked((prevChecked) => ({
+        ...prevChecked,
+        [name]: checked,
+      }))
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +234,7 @@ const InsertProductScreen = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/products/searchml?id=${idProduct}`
+        `https://backend-instabuy-7i9x.vercel.app/api/products/searchml?id=${idProduct}`
       )
       const dados = response.data
 
@@ -199,11 +276,12 @@ const InsertProductScreen = () => {
     setLoadingInsert(true)
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/products/insert',
+        'https://backend-instabuy-7i9x.vercel.app/api/products/insert',
         { product }
       )
 
       setNotification(response.data.message, 'success')
+      window.location.href = searchNewProductRoutesEnum.SEARCH_NEW_PRODUCT_URL
     } catch {
       setNotification('Falha ao inserir o produto...', 'error')
     }
@@ -211,9 +289,16 @@ const InsertProductScreen = () => {
     setLoadingInsert(false)
   }
 
+  const handleCategory = (category: string) => {
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      category: category,
+    }))
+  }
+
   return (
     <Screen stateMenu={display} setStateMenu={setDisplay}>
-      <Menu display={display} openDefault="products" currentKey="product2" />
+      <Menu display={display} currentKey="product2" />
       <FlexContainer background="#" justify="center">
         <FlexContainer
           background="#"
@@ -233,7 +318,7 @@ const InsertProductScreen = () => {
             <FlexContainer
               gap="5px"
               background="#"
-              align="center"
+              align="flex-start"
               directionwrap="row wrap"
             >
               <Space.Compact
@@ -255,16 +340,31 @@ const InsertProductScreen = () => {
                   loading={loading}
                 />
               </Space.Compact>
-              <InputInsert
-                flexContainer="1 1 244.5px"
-                focus={focusedInput === 2}
-                name="category"
-                onChange={(e) => handleInputChange(e)}
-                title="Categoria do Produto"
-                value={product.category}
-                status={statusCategory}
-                disabled={disabledInputs.disabledCategory}
-              />
+              <FlexContainer
+                width="100%"
+                flexcontainer="1 1 244.5px"
+                gap="5px"
+                background="#"
+                directionwrap="column nowrap"
+              >
+                <span>Selecionar Categoria</span>
+                <Select
+                  value={product.category}
+                  defaultValue={product.category}
+                  disabled={disabledInputs.disabledCategory}
+                  options={options}
+                  onChange={handleCategory}
+                  style={{ width: '100%' }}
+                />
+
+                <Checkbox
+                  name="category"
+                  onChange={handleCheckboxChange}
+                  checked={isChecked.category}
+                >
+                  Selecionar Categoria?
+                </Checkbox>
+              </FlexContainer>
             </FlexContainer>
             <InputInsert
               name="name"
@@ -299,9 +399,10 @@ const InsertProductScreen = () => {
               status={statusLinkAffiliate}
               disabled={disabledInputs.disabledLinkAffiliate}
             />
-            <FlexContainer background="#" gap="5px">
+            <FlexContainer background="#" gap="5px" directionwrap="row wrap">
               <InputInsert
-                width="107.5%"
+                flexContainer="1 1 153px"
+                width="100%"
                 name="cupom"
                 onChange={(e) => handleInputChange(e)}
                 title="Cupom"
@@ -312,6 +413,8 @@ const InsertProductScreen = () => {
                 valueCheck={isChecked.cupom}
               />
               <InputMoney
+                flexContainer="1 1 143px"
+                width="100%"
                 name="priceOld"
                 onChange={(e) => handleInputChange(e)}
                 title="Preço Original"
@@ -323,6 +426,8 @@ const InsertProductScreen = () => {
                 valueCheck={isChecked.priceOld}
               />
               <InputMoney
+                flexContainer="1 1 143px"
+                width="100%"
                 name="price"
                 onChange={(e) => handleInputChange(e)}
                 title="Preço do Produto"

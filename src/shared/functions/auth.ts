@@ -7,8 +7,8 @@ import {
 import axios from 'axios'
 import { AUTHORIZATION_KEY, URL_API_TOKEN } from '../constants'
 import { loginRoutesEnum } from '../../modules/login/routes'
-import { insertRoutesEnum } from '../../modules/painel/product/insertProduct/routes'
 import { UserType } from '../types/UserType'
+import { dashboardRoutesEnum } from '../../modules/painel/dashboard/routes'
 
 export const unsetAuthorizationToken = () => {
   removeItemStorage(AUTHORIZATION_KEY)
@@ -16,7 +16,7 @@ export const unsetAuthorizationToken = () => {
 
 export const setAuthorizationToken = (token?: string) => {
   if (token) {
-    setItemStorage(AUTHORIZATION_KEY, token)
+    setItemStorage(AUTHORIZATION_KEY, token, 259200)
   }
 }
 
@@ -25,7 +25,9 @@ export const getAuthorizationToken = () => getItemStorage(AUTHORIZATION_KEY)
 export const verifyLoggedIn = async () => {
   const token = getAuthorizationToken()
   if (!token) {
-    return redirect(loginRoutesEnum.LOGIN_URL)
+    return redirect(
+      `${loginRoutesEnum.LOGIN_URL}?from=${encodeURIComponent(location.pathname)}`
+    )
   }
 
   const user = await axios
@@ -37,7 +39,9 @@ export const verifyLoggedIn = async () => {
     })
 
   if (!user) {
-    return redirect(loginRoutesEnum.LOGIN_URL)
+    return redirect(
+      `${loginRoutesEnum.LOGIN_URL}?from=${encodeURIComponent(location.pathname)}`
+    )
   }
 
   return null
@@ -50,7 +54,7 @@ export const verifyLoggedInLogin = async () => {
       .post(URL_API_TOKEN, { accessToken: token })
       .then((response) => {
         if (response.data) {
-          window.location.href = insertRoutesEnum.INSERT_URL
+          window.location.href = dashboardRoutesEnum.DASHBOARD_URL
         }
       })
       .catch((error) => {

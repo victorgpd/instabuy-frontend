@@ -5,7 +5,7 @@ export const MainContainer = styled.main`
   height: 100%;
   padding: 0;
 
-  background-color: rgb(242, 245, 247);
+  background-color: rgb(230, 233, 235);
 
   flex: 1;
 
@@ -29,6 +29,7 @@ interface NavContainerProps {
 export const NavContainer = styled.nav<NavContainerProps>`
   min-height: 100%;
   background: ${(props) => props.themecolor || '#fff'};
+  box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
 
   z-index: 999;
 
