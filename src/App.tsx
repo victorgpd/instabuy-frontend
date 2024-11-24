@@ -13,6 +13,7 @@ import { verifyLoggedIn } from './shared/functions/auth'
 import { dashboardScreensRoutes } from './modules/painel/dashboard/routes'
 import { registeredProductsScreensRoutes } from './modules/painel/product/registeredProducts/routes'
 import { searchNewProductsScreensRoutes } from './modules/painel/product/searchNewProduct/routes'
+import { updateScreensRoutes } from './modules/painel/product/updateProduct/routes'
 
 function App() {
   const { contextHolder } = useNotification()
@@ -27,6 +28,7 @@ function App() {
     ...registeredProductsScreensRoutes,
     ...insertScreensRoutes,
     ...searchNewProductsScreensRoutes,
+    ...updateScreensRoutes, 
   ].map((route) => ({
     ...route,
     loader: verifyLoggedIn,

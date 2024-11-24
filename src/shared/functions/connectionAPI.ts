@@ -23,6 +23,18 @@ export async function fetchProducts(): Promise<ProductType[]> {
   }
 }
 
+export async function fetchProductMlId(id: string) {
+  try {
+    const response = await axios.get(
+      `https://backend-instabuy-7i9x.vercel.app/api/products/searchml?id=${id}`
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Erro ao buscar produto:', error)
+  }
+}
+
 export async function searchProducts(page: number = 1): Promise<ProductType[]> {
   try {
     const response = await axios.get<{ products: ProductType[] }>(
@@ -139,8 +151,44 @@ export async function fetchNewProducts(
 export async function fetchDeleteProducts(id: string) {
   try {
     await axios.delete(
-      `https://backend-instabuy-7i9x.vercel.app/api/products/${id}`
+      `https://backend-instabuy-7i9x.vercel.app/api/products/delete/${id}`
     )
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function fetchDeleteAllProducts() {
+  try {
+    await axios.delete(
+      `https://backend-instabuy-7i9x.vercel.app/api/products/all`
+    )
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function fetchInsertProduct(product: ProductType) {
+  try {
+    const response = await axios.post(
+      'https://backend-instabuy-7i9x.vercel.app/api/products/insert',
+      { product }
+    )
+
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function fetchUpdateProduct(product: ProductType) {
+  try {
+    const response = await axios.put(
+      'https://backend-instabuy-7i9x.vercel.app/api/products/update',
+      { product }
+    )
+
+    return response
   } catch (error) {
     console.log(error)
   }

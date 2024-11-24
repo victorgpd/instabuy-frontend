@@ -24,6 +24,7 @@ import useTitle from '../../../../../shared/hooks/useTitle'
 
 const SearchNewProduct = () => {
   useTitle('Buscar Produtos')
+
   const navigate = useNavigate()
   const { setNotification } = useGlobalReducer()
   const { products, setProducts } = useProductReducer()
@@ -31,7 +32,6 @@ const SearchNewProduct = () => {
     useCategoriesReducer()
 
   const [search, setSearch] = useState('')
-
   const [loading, setLoading] = useState(false)
   const [display, setDisplay] = useState('none')
   const [dataSource, setDataSource] = useState<DataSourceType[]>([])
@@ -53,14 +53,14 @@ const SearchNewProduct = () => {
       title: 'Nome do Produto',
       dataIndex: 'name',
       key: 'name',
-      width: 500,
+      width: 450,
       ellipsis: true,
     },
     {
       title: 'Categoria',
       dataIndex: 'category',
       key: 'category',
-      width: 200,
+      width: 250,
       render: (text: string) => <span>{convertCategoryId(text)}</span>,
     },
     {

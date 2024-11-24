@@ -17,6 +17,7 @@ import { registeredProductsRoutesEnum } from '../../../modules/painel/product/re
 import { StyledMenuDark, StyledMenuLight } from './menu.style'
 import { useGlobalReducer } from '../../../store/reducers/globalReducer/useGlobalReducer'
 import { searchNewProductRoutesEnum } from '../../../modules/painel/product/searchNewProduct/routes'
+import { updateRoutesEnum } from '../../../modules/painel/product/updateProduct/routes'
 
 type MenuItem = Required<MenuPropsAntd>['items'][number]
 
@@ -59,6 +60,11 @@ const Menu = (props: MenuProps) => {
           label: 'Buscar novos produtos',
           onClick: () =>
             navigate(searchNewProductRoutesEnum.SEARCH_NEW_PRODUCT_URL),
+        },
+        {
+          key: 'product4',
+          label: 'Editar produto',
+          onClick: () => navigate(updateRoutesEnum.UPDATE_URL),
         },
       ],
     },

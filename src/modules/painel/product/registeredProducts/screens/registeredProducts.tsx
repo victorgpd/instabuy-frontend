@@ -7,82 +7,40 @@ import Table, {
   DataSourceType,
 } from '../../../../../shared/components/table/table'
 import {
+  fetchDeleteAllProducts,
   fetchDeleteProducts,
   fetchProducts,
 } from '../../../../../shared/functions/connectionAPI'
 import { useProductReducer } from '../../../../../store/reducers/productReducer/useProductReducer'
-import { Button, Spin } from 'antd'
+import { Button, Modal, Spin } from 'antd'
 import { convertNumberToMoney } from '../../../../../shared/functions/money'
 import { LoadingOutlined } from '@ant-design/icons'
+import { useGlobalReducer } from '../../../../../store/reducers/globalReducer/useGlobalReducer'
+import { useNavigate } from 'react-router-dom'
+import { insertRoutesEnum } from '../../insertProduct/routes'
+import { updateRoutesEnum } from '../../updateProduct/routes'
+import { useCategoriesReducer } from '../../../../../store/reducers/categoriesReducer/useCategoryReducer'
 
 const RegisteredProducts = () => {
   useTitle('Produtos Cadastrados')
+
+  const navigate = useNavigate()
+  const { setNotification } = useGlobalReducer()
   const { setProducts } = useProductReducer()
+  const { categories, searchCategories } = useCategoriesReducer()
 
   const [loading, setLoading] = useState(false)
   const [display, setDisplay] = useState('none')
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [dataSource, setDataSource] = useState<DataSourceType[]>([])
   const [productSelected, setProductSelected] = useState<DataSourceType[]>()
-
-  useEffect(() => {
-    loadProducts()
-  }, [])
-
-  const loadProducts = async () => {
-    setLoading(true)
-    try {
-      // Obtém os produtos do backend
-      const fetchedProducts = await fetchProducts()
-
-      // Atualiza o estado diretamente removendo duplicatas
-      setDataSource((prevDataSource) => {
-        const existingIds = new Set(prevDataSource.map((product) => product.id))
-        const newProducts = fetchedProducts.filter(
-          (product) => !existingIds.has(product.id)
-        )
-
-        // Mapeia os novos produtos para o formato esperado pelo `dataSource`
-        const newDataSource = newProducts.map((product) => ({
-          key: product.id,
-          id: product.id,
-          name: product.name,
-          image: product.image,
-          category: product.category,
-          linkOriginal: product.linkOriginal,
-          linkAffiliate: product.linkAffiliate,
-          price: `R$ ${convertNumberToMoney(product.price)}`,
-          priceOld:
-            product.priceOld && product.priceOld > 0
-              ? `R$ ${convertNumberToMoney(product.priceOld)}`
-              : '',
-          cupom: product.cupom,
-        }))
-
-        // Combina os produtos existentes com os novos (sem duplicatas)
-        return [...prevDataSource, ...newDataSource]
-      })
-
-      // Opcional: Atualiza o estado global `products`, se necessário
-      setProducts((prevProducts) => {
-        const existingIds = new Set(prevProducts.map((product) => product.id))
-        const newProducts = fetchedProducts.filter(
-          (product) => !existingIds.has(product.id)
-        )
-        return [...prevProducts, ...newProducts]
-      })
-    } catch (error) {
-      console.error('Erro ao carregar os produtos:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const columns = [
     {
       title: 'ID do Produto',
       dataIndex: 'id',
       key: 'id',
-      width: 140,
+      width: 150,
       render: (text: string) => (
         <span style={{ color: '#1677ff' }}>{text}</span>
       ),
@@ -91,20 +49,21 @@ const RegisteredProducts = () => {
       title: 'Nome do Produto',
       dataIndex: 'name',
       key: 'name',
-      width: 500,
+      width: 450,
       ellipsis: true,
     },
     {
       title: 'Categoria',
       dataIndex: 'category',
       key: 'category',
-      width: 135,
+      width: 255,
+      render: (text: string) => <span>{convertCategoryId(text)}</span>,
     },
     {
       title: 'Preço Original',
       dataIndex: 'priceOld',
       key: 'priceOld',
-      width: 150,
+      width: 130,
       render: (text: string) => (
         <span
           style={{
@@ -155,6 +114,65 @@ const RegisteredProducts = () => {
     },
   ]
 
+  useEffect(() => {
+    loadProducts()
+    searchCategories()
+  }, [])
+
+  const handleUpdate = async () => {
+    setDataSource([])
+    loadProducts()
+  }
+
+  const loadProducts = async () => {
+    setLoading(true)
+    try {
+      // Obtém os produtos do backend
+      const fetchedProducts = await fetchProducts()
+
+      // Atualiza o estado diretamente removendo duplicatas
+      setDataSource((prevDataSource) => {
+        const existingIds = new Set(prevDataSource.map((product) => product.id))
+        const newProducts = fetchedProducts.filter(
+          (product) => !existingIds.has(product.id)
+        )
+
+        // Mapeia os novos produtos para o formato esperado pelo `dataSource`
+        const newDataSource = newProducts.map((product) => ({
+          key: product.id,
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          category: product.category,
+          linkOriginal: product.linkOriginal,
+          linkAffiliate: product.linkAffiliate,
+          price: `R$ ${convertNumberToMoney(product.price)}`,
+          priceOld:
+            product.priceOld && product.priceOld > 0
+              ? `R$ ${convertNumberToMoney(product.priceOld)}`
+              : '',
+          cupom: product.cupom,
+        }))
+
+        // Combina os produtos existentes com os novos (sem duplicatas)
+        return [...prevDataSource, ...newDataSource]
+      })
+
+      // Opcional: Atualiza o estado global `products`, se necessário
+      setProducts((prevProducts) => {
+        const existingIds = new Set(prevProducts.map((product) => product.id))
+        const newProducts = fetchedProducts.filter(
+          (product) => !existingIds.has(product.id)
+        )
+        return [...prevProducts, ...newProducts]
+      })
+    } catch (error) {
+      console.error('Erro ao carregar os produtos:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const deleteProducts = async () => {
     if (productSelected && productSelected.length > 0) {
       setLoading(true)
@@ -170,17 +188,70 @@ const RegisteredProducts = () => {
         setProducts((prevProducts) =>
           prevProducts.filter((product) => product.id !== productSelected[0].id)
         )
+        setNotification('Produto deletado com sucesso!', 'success')
       } catch (error) {
-        console.error('Erro ao excluir o produto:', error)
+        setNotification('Erro ao deletar o produto...', 'error')
       } finally {
         setLoading(false)
       }
     }
   }
 
+  const deleteAllProducts = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleModalOk = async () => {
+    try {
+      await fetchDeleteAllProducts()
+      setDataSource([])
+
+      loadProducts()
+      setNotification(
+        'Todos os produtos foram deletados com sucesso!',
+        'success'
+      )
+    } catch (error) {
+      setNotification('Erro ao deletar todos os produto...', 'error')
+    } finally {
+      setIsModalOpen(false)
+    }
+  }
+
+  const handleModalCancel = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleUpdateProduct = () => {
+    if (!productSelected) {
+      setNotification('Selecione um produto para editar!', 'error')
+    } else {
+      navigate(`${updateRoutesEnum.UPDATE_URL}?id=${productSelected[0].id}`)
+    }
+  }
+
+  const convertCategoryId = (categoryId: string) => {
+    for (let category of categories) {
+      if (category.id === categoryId) {
+        return category.name
+      }
+    }
+
+    return 'Mais categorias'
+  }
+
   return (
     <Screen stateMenu={display} setStateMenu={setDisplay}>
       <Menu display={display} currentKey="product1" />
+      <Modal
+        title="Confirmação"
+        open={isModalOpen}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+      >
+        <p>Tem certeza que deseja excluir tudo?</p>
+      </Modal>
+
       <FlexContainer
         directionwrap="column nowrap"
         background="#"
@@ -192,22 +263,48 @@ const RegisteredProducts = () => {
         {loading && (
           <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
         )}
-        <FlexContainer background="#" gap="10px">
-          <Button color="primary" variant="outlined">
-            Novo
-          </Button>
-          <Button color="primary" variant="outlined">
-            Editar
-          </Button>
-          <Button color="primary" onClick={loadProducts} variant="outlined">
-            Atualizar
-          </Button>
-          <Button color="danger" onClick={deleteProducts} variant="outlined">
-            Excluir
-          </Button>
-          <Button color="danger" variant="outlined">
-            Excluir Tudo
-          </Button>
+        <FlexContainer background="#" gap="10px 0" directionwrap="row wrap">
+          <FlexContainer
+            width="245px"
+            gap="7px"
+            background="#"
+            directionwrap="row nowrap"
+          >
+            <Button color="primary" onClick={handleUpdate} variant="outlined">
+              Atualizar
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => navigate(insertRoutesEnum.INSERT_URL)}
+              variant="outlined"
+            >
+              Novo
+            </Button>
+            <Button
+              onClick={handleUpdateProduct}
+              color="primary"
+              variant="outlined"
+            >
+              Editar
+            </Button>
+          </FlexContainer>
+          <FlexContainer
+            width="190px"
+            gap="7px"
+            background="#"
+            directionwrap="row nowrap"
+          >
+            <Button color="danger" onClick={deleteProducts} variant="outlined">
+              Excluir
+            </Button>
+            <Button
+              onClick={deleteAllProducts}
+              color="danger"
+              variant="outlined"
+            >
+              Excluir Tudo
+            </Button>
+          </FlexContainer>
         </FlexContainer>
         <FlexContainer overflow="scroll" padding="20px">
           <Table
@@ -215,7 +312,7 @@ const RegisteredProducts = () => {
             height="100%"
             maxheight="750px"
             setProductSelected={setProductSelected}
-            dataSource={dataSource} // Usa o estado atualizado corretamente
+            dataSource={dataSource}
             columns={columns}
           />
         </FlexContainer>

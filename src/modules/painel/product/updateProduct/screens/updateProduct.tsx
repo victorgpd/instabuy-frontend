@@ -6,33 +6,31 @@ import { CloseOutlined, SaveFilled, SearchOutlined } from '@ant-design/icons'
 import { InputInsert } from '../../../../../shared/components/inputs/inputInsert/inputInsert'
 import { useEffect, useState } from 'react'
 import { statusType } from '../../../../../shared/components/inputs/inputInsert/inputInsert'
+import axios from 'axios'
 import { ProductType } from '../../../../../shared/types/ProductType'
 import { useGlobalReducer } from '../../../../../store/reducers/globalReducer/useGlobalReducer'
 import InputMoney from '../../../../../shared/components/inputs/inputMoney/inputMoney'
 import Menu from '../../../../../shared/components/menu/menu'
 import useTitle from '../../../../../shared/hooks/useTitle'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { searchNewProductRoutesEnum } from '../../searchNewProduct/routes'
 import { useCategoriesReducer } from '../../../../../store/reducers/categoriesReducer/useCategoryReducer'
-import {
-  fetchInsertProduct,
-  fetchProductMlId,
-} from '../../../../../shared/functions/connectionAPI'
 import { registeredProductsRoutesEnum } from '../../registeredProducts/routes'
+import { fetchUpdateProduct } from '../../../../../shared/functions/connectionAPI'
 
-const InsertProductScreen = () => {
-  useTitle('Inserir Produto')
+const UpdateProductScreen = () => {
+  useTitle('Editar Produto')
 
-  const location = useLocation()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const queryParams = new URLSearchParams(location.search)
+  const id = queryParams.get('id')
 
   const { setNotification } = useGlobalReducer()
-  const { productSelected = [] } = location.state || {}
-
-  const { categories, searchCategories, searchSubCategories } =
+  const { categories, searchCategories, subCategories, searchSubCategories } =
     useCategoriesReducer()
-  const [options, setOptions] = useState<SelectProps['options']>([])
 
+  const [options, setOptions] = useState<SelectProps['options']>([])
   const [display, setDisplay] = useState('none')
   const [loading, setLoading] = useState(false)
   const [loadingInsert, setLoadingInsert] = useState(false)
@@ -61,11 +59,12 @@ const InsertProductScreen = () => {
   })
 
   const [disabledInputs, setDisabledInputs] = useState({
+    disabledId: true,
     disabledName: true,
     disabledImage: true,
     disabledLink: true,
     disabledLinkAffiliate: false,
-    disabledCategory: true,
+    disabledCategory: false,
     disabledPriceOld: true,
     disabledCupom: true,
   })
@@ -73,41 +72,16 @@ const InsertProductScreen = () => {
   const [isChecked, setIsChecked] = useState({
     cupom: false,
     priceOld: false,
-    category: false,
+    category: true,
   })
 
   useEffect(() => {
-    if (productSelected.length > 0) {
-      for (let productSelect of productSelected) {
-        if (formatToNumber(productSelect.priceOld) != 0) {
-          setIsChecked((prevChecked) => ({
-            ...prevChecked,
-            priceOld: true,
-          }))
-        }
-
-        if (productSelect.cupom != '') {
-          setIsChecked((prevChecked) => ({
-            ...prevChecked,
-            cupom: true,
-          }))
-        }
-
-        setProduct({
-          id: productSelect.id,
-          category: productSelect.category,
-          store: 'Mercado Livre',
-          name: productSelect.name,
-          image: productSelect.image,
-          price: formatToNumber(productSelect.price),
-          priceOld: formatToNumber(productSelect.priceOld),
-          cupom: productSelect.cupom,
-          linkOriginal: productSelect.linkOriginal,
-          linkAffiliate: productSelect.linkAffiliate,
-        })
-      }
+    if (!id) {
+      window.location.href = registeredProductsRoutesEnum.REGISTERED_PRODUCT_URL
+    } else {
+      handleSearch(id)
     }
-  }, [productSelected])
+  }, [])
 
   useEffect(() => {
     let emptyFields = Object.keys(product).filter(
@@ -169,20 +143,6 @@ const InsertProductScreen = () => {
     setOptions(updatedOptions)
   }, [categories])
 
-  const formatToNumber = (value: string | undefined): number => {
-    if (!value) return 0
-
-    const cleanedValue = value
-      .replace('R$', '')
-      .replace(/\./g, '')
-      .replace(',', '.')
-      .trim()
-
-    const numberValue = parseFloat(cleanedValue)
-
-    return isNaN(numberValue) ? 0 : numberValue
-  }
-
   const handleCheckboxChange: CheckboxProps['onChange'] = (e) => {
     const { name, checked } = e.target
 
@@ -213,41 +173,43 @@ const InsertProductScreen = () => {
     }
   }
 
-  const resetProduct = (idAtual?: string) => {
-    if (!idAtual) {
-      idAtual = ''
-    }
-
-    setProduct({
-      id: idAtual,
-      category: '',
-      store: '',
-      name: '',
-      image: '',
-      cupom: '',
-      linkOriginal: '',
-      linkAffiliate: '',
-      priceOld: 0.0,
-      price: 0.0,
-    })
-  }
-
   const handleSearch = async (idProduct: string) => {
     setLoading(true)
     setStatusId('')
-    resetProduct(product.id)
 
     try {
-      const dados = await fetchProductMlId(idProduct)
+      const response = await axios.get(
+        `https://backend-instabuy-7i9x.vercel.app/api/products/searchid?id=${id}`
+      )
+      const dados = response.data.product
+
+      console.log(dados.priceOld, typeof dados.priceOld)
+
+      if (dados.priceOld > 0) {
+        setIsChecked((prevIsChecked) => ({
+          ...prevIsChecked,
+          priceOld: true,
+        }))
+      }
+
+      if (dados.cupom != '') {
+        setIsChecked((prevIsChecked) => ({
+          ...prevIsChecked,
+          cupom: true,
+        }))
+      }
 
       setProduct((prevProduct) => ({
-        ...prevProduct,
         id: dados.id,
-        name: dados.title,
-        category: dados.category_id,
-        image: dados.pictures[0].url,
-        store: 'Mercado Livre',
-        linkOriginal: dados.permalink,
+        name: dados.name,
+        category: dados.category,
+        image: dados.image,
+        store: dados.store,
+        linkOriginal: dados.linkOriginal,
+        linkAffiliate: dados.linkAffiliate,
+        priceOld: dados.priceOld,
+        price: dados.price,
+        cupom: dados.cupom,
       }))
     } catch (error) {
       setStatusId('error')
@@ -255,21 +217,16 @@ const InsertProductScreen = () => {
     setLoading(false)
   }
 
-  const handleEnterPress: React.KeyboardEventHandler<HTMLInputElement> = () => {
-    handleSearch(product.id)
-  }
-
-  const handleInsertProduct = async () => {
+  const handleUpdateProduct = async () => {
     setLoadingInsert(true)
     try {
-      const response = await fetchInsertProduct(product)
+      const response = await fetchUpdateProduct(product)
 
       setNotification(response?.data.message, 'success')
-      window.location.href = searchNewProductRoutesEnum.SEARCH_NEW_PRODUCT_URL
+      window.location.href = registeredProductsRoutesEnum.REGISTERED_PRODUCT_URL
     } catch {
       setNotification('Falha ao inserir o produto...', 'error')
     }
-    resetProduct()
     setLoadingInsert(false)
   }
 
@@ -282,7 +239,7 @@ const InsertProductScreen = () => {
 
   return (
     <Screen stateMenu={display} setStateMenu={setDisplay}>
-      <Menu display={display} currentKey="product2" />
+      <Menu display={display} currentKey="product4" />
       <FlexContainer background="#" justify="center">
         <FlexContainer
           background="#"
@@ -315,13 +272,7 @@ const InsertProductScreen = () => {
                   onChange={(e) => handleInputChange(e)}
                   title="ID do Produto"
                   value={product.id}
-                  onEnter={handleEnterPress}
-                />
-                <Button
-                  type="primary"
-                  icon={<SearchOutlined />}
-                  onClick={() => handleSearch(product.id)}
-                  loading={loading}
+                  disabled={disabledInputs.disabledId}
                 />
               </Space.Compact>
               <FlexContainer
@@ -424,12 +375,13 @@ const InsertProductScreen = () => {
             <Button
               type="primary"
               icon={<SaveFilled />}
-              onClick={handleInsertProduct}
+              onClick={handleUpdateProduct}
               disabled={disabledButton}
               loading={loadingInsert}
             >
-              Inserir Produto
+              Editar Produto
             </Button>
+
             <Button
               color="danger"
               variant="outlined"
@@ -447,4 +399,4 @@ const InsertProductScreen = () => {
   )
 }
 
-export default InsertProductScreen
+export default UpdateProductScreen
