@@ -1,20 +1,12 @@
 import axios from 'axios'
 import { ProductType } from '../types/ProductType'
 import { CategoriesType } from '../types/CategoriesType'
-import {
-  URL_API_CATEGORIES_ALL,
-  URL_API_NEW_PRODUCTS,
-  URL_API_PRODUCT_SEARCH,
-  URL_API_PRODUCTS_ALL,
-  URL_API_SUBCATEGORIES_SEARCH,
-} from '../constants'
+import { URL_API_CATEGORIES_ALL, URL_API_NEW_PRODUCTS, URL_API_PRODUCT_SEARCH, URL_API_PRODUCTS_ALL, URL_API_SUBCATEGORIES_SEARCH } from '../constants'
 import { SubCategoriesType } from '../types/SubCategoriesType'
 
 export async function fetchProducts(): Promise<ProductType[]> {
   try {
-    const response = await axios.get<{ products: ProductType[] }>(
-      URL_API_PRODUCTS_ALL
-    )
+    const response = await axios.get<{ products: ProductType[] }>(URL_API_PRODUCTS_ALL)
 
     return response.data.products
   } catch (error) {
@@ -25,9 +17,7 @@ export async function fetchProducts(): Promise<ProductType[]> {
 
 export async function fetchProductMlId(id: string) {
   try {
-    const response = await axios.get(
-      `https://backend-instabuy-7i9x.vercel.app/api/products/searchml?id=${id}`
-    )
+    const response = await axios.get(`https://backend-instabuy-7i9x.vercel.app/api/products/searchml?id=${id}`)
 
     return response.data
   } catch (error) {
@@ -37,9 +27,7 @@ export async function fetchProductMlId(id: string) {
 
 export async function searchProducts(page: number = 1): Promise<ProductType[]> {
   try {
-    const response = await axios.get<{ products: ProductType[] }>(
-      `${URL_API_PRODUCT_SEARCH}${page}`
-    )
+    const response = await axios.get<{ products: ProductType[] }>(`${URL_API_PRODUCT_SEARCH}${page}`)
 
     return response.data.products
   } catch (error) {
@@ -51,9 +39,7 @@ export async function searchProducts(page: number = 1): Promise<ProductType[]> {
 export async function searchProductsMlQ(q: string): Promise<ProductType[]> {
   try {
     let products = []
-    const response = await axios.get(
-      `https://backend-instabuy-7i9x.vercel.app/api/products/searchmlq?q=${q}`
-    )
+    const response = await axios.get(`https://backend-instabuy-7i9x.vercel.app/api/products/searchmlq?q=${q}`)
 
     for (let product of response.data.results) {
       products.push({
@@ -77,14 +63,9 @@ export async function searchProductsMlQ(q: string): Promise<ProductType[]> {
   }
 }
 
-export async function searchProductsDB(
-  product: string,
-  page: number = 1
-): Promise<ProductType[]> {
+export async function searchProductsDB(product: string, page: number = 1): Promise<ProductType[]> {
   try {
-    const response = await axios.get<{ products: ProductType[] }>(
-      `https://backend-instabuy-7i9x.vercel.app/api/products/searchdb?search=${product}&page=${page}`
-    )
+    const response = await axios.get<{ products: ProductType[] }>(`https://backend-instabuy-7i9x.vercel.app/api/products/searchdb?search=${product}&page=${page}`)
 
     return response.data.products
   } catch (error) {
@@ -95,9 +76,7 @@ export async function searchProductsDB(
 
 export async function fetchCategories(): Promise<CategoriesType[]> {
   try {
-    const response = await axios.get<{ categories: CategoriesType[] }>(
-      URL_API_CATEGORIES_ALL
-    )
+    const response = await axios.get<{ categories: CategoriesType[] }>(URL_API_CATEGORIES_ALL)
 
     return response.data.categories
   } catch (error) {
@@ -108,9 +87,7 @@ export async function fetchCategories(): Promise<CategoriesType[]> {
 
 export async function fetchSubCategories(): Promise<SubCategoriesType[]> {
   try {
-    const response = await axios.get<{ subcategories: SubCategoriesType[] }>(
-      URL_API_SUBCATEGORIES_SEARCH
-    )
+    const response = await axios.get<{ subcategories: SubCategoriesType[] }>(URL_API_SUBCATEGORIES_SEARCH)
 
     return response.data.subcategories
   } catch (error) {
@@ -119,9 +96,7 @@ export async function fetchSubCategories(): Promise<SubCategoriesType[]> {
   }
 }
 
-export async function fetchNewProducts(
-  category: string
-): Promise<ProductType[]> {
+export async function fetchNewProducts(category: string): Promise<ProductType[]> {
   try {
     let products = []
     const response = await axios.get(URL_API_NEW_PRODUCTS + category)
@@ -150,9 +125,7 @@ export async function fetchNewProducts(
 
 export async function fetchDeleteProducts(id: string) {
   try {
-    await axios.delete(
-      `https://backend-instabuy-7i9x.vercel.app/api/products/delete/${id}`
-    )
+    await axios.delete(`https://backend-instabuy-7i9x.vercel.app/api/products/delete/${id}`)
   } catch (error) {
     console.log(error)
   }
@@ -160,9 +133,7 @@ export async function fetchDeleteProducts(id: string) {
 
 export async function fetchDeleteAllProducts() {
   try {
-    await axios.delete(
-      `https://backend-instabuy-7i9x.vercel.app/api/products/all`
-    )
+    await axios.delete(`https://backend-instabuy-7i9x.vercel.app/api/products/all`)
   } catch (error) {
     console.log(error)
   }
@@ -170,10 +141,7 @@ export async function fetchDeleteAllProducts() {
 
 export async function fetchInsertProduct(product: ProductType) {
   try {
-    const response = await axios.post(
-      'https://backend-instabuy-7i9x.vercel.app/api/products/insert',
-      { product }
-    )
+    const response = await axios.post('https://backend-instabuy-7i9x.vercel.app/api/products/insert', { product })
 
     return response
   } catch (error) {
@@ -183,10 +151,7 @@ export async function fetchInsertProduct(product: ProductType) {
 
 export async function fetchUpdateProduct(product: ProductType) {
   try {
-    const response = await axios.put(
-      'https://backend-instabuy-7i9x.vercel.app/api/products/update',
-      { product }
-    )
+    const response = await axios.put('https://backend-instabuy-7i9x.vercel.app/api/products/update', { product })
 
     return response
   } catch (error) {
