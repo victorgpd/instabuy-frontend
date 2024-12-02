@@ -1,6 +1,5 @@
 {
   "name": "achoushop",
-  "homepage": "https://victorgpd.github.io/instabuy-frontend/",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
