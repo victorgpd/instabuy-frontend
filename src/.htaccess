@@ -1,0 +1,16 @@
+# Habilita o uso de mod_rewrite
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redireciona todas as requisições para index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Define o cache para arquivos estáticos (opcional)
+# <IfModule mod_headers.c>
+#   <FilesMatch "\.(js|css|html|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|otf|eot)$">
+#     Header set Cache-Control "max-age=31536000, public"
+#   </FilesMatch>
+# </IfModule>
