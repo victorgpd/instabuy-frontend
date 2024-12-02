@@ -15,7 +15,7 @@ import useTitle from '../../../../../shared/hooks/useTitle'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCategoriesReducer } from '../../../../../store/reducers/categoriesReducer/useCategoryReducer'
 import { registeredProductsRoutesEnum } from '../../registeredProducts/routes'
-import { fetchUpdateProduct } from '../../../../../shared/functions/connectionAPI'
+import { fetchSearchProductId, fetchUpdateProduct } from '../../../../../shared/functions/connectionAPI'
 
 const UpdateProductScreen = () => {
   useTitle('Editar Produto')
@@ -27,8 +27,7 @@ const UpdateProductScreen = () => {
   const id = queryParams.get('id')
 
   const { setNotification } = useGlobalReducer()
-  const { categories, searchCategories, subCategories, searchSubCategories } =
-    useCategoriesReducer()
+  const { categories, searchCategories, subCategories, searchSubCategories } = useCategoriesReducer()
 
   const [options, setOptions] = useState<SelectProps['options']>([])
   const [display, setDisplay] = useState('none')
@@ -84,9 +83,7 @@ const UpdateProductScreen = () => {
   }, [])
 
   useEffect(() => {
-    let emptyFields = Object.keys(product).filter(
-      (key) => product[key as keyof ProductType] === ''
-    )
+    let emptyFields = Object.keys(product).filter((key) => product[key as keyof ProductType] === '')
 
     if (!isChecked.cupom && product.cupom) {
       setProduct((prevProduct) => ({
@@ -178,39 +175,36 @@ const UpdateProductScreen = () => {
     setStatusId('')
 
     try {
-      const response = await axios.get(
-        `https://backend-instabuy-7i9x.vercel.app/api/products/searchid?id=${id}`
-      )
-      const dados = response.data.product
+      if (id) {
+        const dados = await fetchSearchProductId(id)
 
-      console.log(dados.priceOld, typeof dados.priceOld)
+        if (dados.priceOld > 0) {
+          setIsChecked((prevIsChecked) => ({
+            ...prevIsChecked,
+            priceOld: true,
+          }))
+        }
 
-      if (dados.priceOld > 0) {
-        setIsChecked((prevIsChecked) => ({
-          ...prevIsChecked,
-          priceOld: true,
+        if (dados.cupom != '') {
+          setIsChecked((prevIsChecked) => ({
+            ...prevIsChecked,
+            cupom: true,
+          }))
+        }
+
+        setProduct((prevProduct) => ({
+          id: dados.id,
+          name: dados.name,
+          category: dados.category,
+          image: dados.image,
+          store: dados.store,
+          linkOriginal: dados.linkOriginal,
+          linkAffiliate: dados.linkAffiliate,
+          priceOld: dados.priceOld,
+          price: dados.price,
+          cupom: dados.cupom,
         }))
       }
-
-      if (dados.cupom != '') {
-        setIsChecked((prevIsChecked) => ({
-          ...prevIsChecked,
-          cupom: true,
-        }))
-      }
-
-      setProduct((prevProduct) => ({
-        id: dados.id,
-        name: dados.name,
-        category: dados.category,
-        image: dados.image,
-        store: dados.store,
-        linkOriginal: dados.linkOriginal,
-        linkAffiliate: dados.linkAffiliate,
-        priceOld: dados.priceOld,
-        price: dados.price,
-        cupom: dados.cupom,
-      }))
     } catch (error) {
       setStatusId('error')
     }
@@ -241,112 +235,27 @@ const UpdateProductScreen = () => {
     <Screen stateMenu={display} setStateMenu={setDisplay}>
       <Menu display={display} currentKey="product4" />
       <FlexContainer background="#" justify="center">
-        <FlexContainer
-          background="#"
-          padding="40px 20px"
-          width="100%"
-          height="100%"
-          directionwrap="column nowrap"
-          gap="15px"
-          justify="center"
-          style={{ maxWidth: '500px' }}
-        >
-          <FlexContainer
-            background="#"
-            gap="15px"
-            directionwrap="column nowrap"
-          >
-            <FlexContainer
-              gap="5px"
-              background="#"
-              align="flex-start"
-              directionwrap="row wrap"
-            >
-              <Space.Compact
-                style={{ flex: '1 1 197.5px', alignItems: 'flex-end' }}
-              >
-                <InputInsert
-                  name="id"
-                  status={statusId}
-                  focus={focusedInput === 1}
-                  onChange={(e) => handleInputChange(e)}
-                  title="ID do Produto"
-                  value={product.id}
-                  disabled={disabledInputs.disabledId}
-                />
+        <FlexContainer background="#" padding="40px 20px" width="100%" height="100%" directionwrap="column nowrap" gap="15px" justify="center" style={{ maxWidth: '500px' }}>
+          <FlexContainer background="#" gap="15px" directionwrap="column nowrap">
+            <FlexContainer gap="5px" background="#" align="flex-start" directionwrap="row wrap">
+              <Space.Compact style={{ flex: '1 1 197.5px', alignItems: 'flex-end' }}>
+                <InputInsert name="id" status={statusId} focus={focusedInput === 1} onChange={(e) => handleInputChange(e)} title="ID do Produto" value={product.id} disabled={disabledInputs.disabledId} />
               </Space.Compact>
-              <FlexContainer
-                width="100%"
-                flexcontainer="1 1 244.5px"
-                gap="5px"
-                background="#"
-                directionwrap="column nowrap"
-              >
+              <FlexContainer width="100%" flexcontainer="1 1 244.5px" gap="5px" background="#" directionwrap="column nowrap">
                 <span>Selecionar Categoria</span>
-                <Select
-                  value={product.category}
-                  defaultValue={product.category}
-                  disabled={disabledInputs.disabledCategory}
-                  options={options}
-                  onChange={handleCategory}
-                  style={{ width: '100%' }}
-                />
+                <Select value={product.category} defaultValue={product.category} disabled={disabledInputs.disabledCategory} options={options} onChange={handleCategory} style={{ width: '100%' }} />
 
-                <Checkbox
-                  name="category"
-                  onChange={handleCheckboxChange}
-                  checked={isChecked.category}
-                >
+                <Checkbox name="category" onChange={handleCheckboxChange} checked={isChecked.category}>
                   Selecionar Categoria?
                 </Checkbox>
               </FlexContainer>
             </FlexContainer>
-            <InputInsert
-              name="name"
-              onChange={(e) => handleInputChange(e)}
-              title="Nome do Produto"
-              value={product.name}
-              status={statusName}
-              disabled={disabledInputs.disabledName}
-            />
-            <InputInsert
-              name="image"
-              onChange={(e) => handleInputChange(e)}
-              title="Imagem do Produto"
-              value={product.image}
-              status={statusImage}
-              disabled={disabledInputs.disabledImage}
-            />
-            <InputInsert
-              name="linkOriginal"
-              onChange={(e) => handleInputChange(e)}
-              title="Link do Produto"
-              value={product.linkOriginal}
-              status={statusLink}
-              disabled={disabledInputs.disabledLink}
-            />
-            <InputInsert
-              name="linkAffiliate"
-              onChange={(e) => handleInputChange(e)}
-              focus={focusedInput === 3}
-              title="Link de Afiliado"
-              value={product.linkAffiliate}
-              status={statusLinkAffiliate}
-              disabled={disabledInputs.disabledLinkAffiliate}
-            />
+            <InputInsert name="name" onChange={(e) => handleInputChange(e)} title="Nome do Produto" value={product.name} status={statusName} disabled={disabledInputs.disabledName} />
+            <InputInsert name="image" onChange={(e) => handleInputChange(e)} title="Imagem do Produto" value={product.image} status={statusImage} disabled={disabledInputs.disabledImage} />
+            <InputInsert name="linkOriginal" onChange={(e) => handleInputChange(e)} title="Link do Produto" value={product.linkOriginal} status={statusLink} disabled={disabledInputs.disabledLink} />
+            <InputInsert name="linkAffiliate" onChange={(e) => handleInputChange(e)} focus={focusedInput === 3} title="Link de Afiliado" value={product.linkAffiliate} status={statusLinkAffiliate} disabled={disabledInputs.disabledLinkAffiliate} />
             <FlexContainer background="#" gap="5px" directionwrap="row wrap">
-              <InputInsert
-                flexContainer="1 1 153px"
-                width="100%"
-                name="cupom"
-                onChange={(e) => handleInputChange(e)}
-                title="Cupom"
-                value={product.cupom}
-                disabled={disabledInputs.disabledCupom}
-                checkbox="Adicionar Cupom?"
-                onChangeCheck={handleCheckboxChange}
-                valueCheck={isChecked.cupom}
-              />
+              <InputInsert flexContainer="1 1 153px" width="100%" name="cupom" onChange={(e) => handleInputChange(e)} title="Cupom" value={product.cupom} disabled={disabledInputs.disabledCupom} checkbox="Adicionar Cupom?" onChangeCheck={handleCheckboxChange} valueCheck={isChecked.cupom} />
               <InputMoney
                 flexContainer="1 1 143px"
                 width="100%"
@@ -360,36 +269,15 @@ const UpdateProductScreen = () => {
                 onChangeCheck={handleCheckboxChange}
                 valueCheck={isChecked.priceOld}
               />
-              <InputMoney
-                flexContainer="1 1 143px"
-                width="100%"
-                name="price"
-                onChange={(e) => handleInputChange(e)}
-                title="Preço do Produto"
-                focus={focusedInput === 4}
-                value={product.price}
-              />
+              <InputMoney flexContainer="1 1 143px" width="100%" name="price" onChange={(e) => handleInputChange(e)} title="Preço do Produto" focus={focusedInput === 4} value={product.price} />
             </FlexContainer>
           </FlexContainer>
           <FlexContainer background="#" justify="flex-end" gap="10px">
-            <Button
-              type="primary"
-              icon={<SaveFilled />}
-              onClick={handleUpdateProduct}
-              disabled={disabledButton}
-              loading={loadingInsert}
-            >
+            <Button type="primary" icon={<SaveFilled />} onClick={handleUpdateProduct} disabled={disabledButton} loading={loadingInsert}>
               Editar Produto
             </Button>
 
-            <Button
-              color="danger"
-              variant="outlined"
-              icon={<CloseOutlined />}
-              onClick={() =>
-                navigate(registeredProductsRoutesEnum.REGISTERED_PRODUCT_URL)
-              }
-            >
+            <Button color="danger" variant="outlined" icon={<CloseOutlined />} onClick={() => navigate(registeredProductsRoutesEnum.REGISTERED_PRODUCT_URL)}>
               Cancelar
             </Button>
           </FlexContainer>

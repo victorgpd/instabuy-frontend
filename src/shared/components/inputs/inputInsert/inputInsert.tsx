@@ -23,29 +23,11 @@ export type statusType = '' | 'warning' | 'error'
 
 export const InputInsert = (props: InputInsertProps) => {
   return (
-    <FlexContainer
-      width={props.width}
-      flexcontainer={props.flexContainer}
-      gap="5px"
-      background="#"
-      directionwrap="column nowrap"
-    >
+    <FlexContainer height="55px" width={props.width} flexcontainer={props.flexContainer} gap="5px" background="#" directionwrap="column nowrap">
       <span>{props.title}</span>
-      <Input
-        autoFocus={props.focus}
-        onChange={props.onChange}
-        name={props.name}
-        status={props.status}
-        disabled={props.disabled}
-        value={props.value}
-        onPressEnter={props.onEnter}
-      />
+      <Input autoFocus={props.focus} onChange={props.onChange} name={props.name} status={props.status} disabled={props.disabled} value={props.value} onPressEnter={props.onEnter} />
       {props.checkbox && (
-        <Checkbox
-          name={props.name}
-          onChange={props.onChangeCheck}
-          checked={props.valueCheck}
-        >
+        <Checkbox name={props.name} onChange={props.onChangeCheck} checked={props.valueCheck}>
           {props.checkbox}
         </Checkbox>
       )}

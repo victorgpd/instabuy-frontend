@@ -1,22 +1,8 @@
 import { Dropdown, MenuProps } from 'antd'
 import Logo from '../../../images/logo.png'
 import { FlexContainer } from '../flexcontainer/flexcontainer.style'
-import {
-  ButtonMenu,
-  ButtonUser,
-  HeaderContainer,
-  LogoHeader,
-  NameLogo,
-} from './header.style'
-import {
-  AppstoreOutlined,
-  CloseOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-  MenuOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
+import { ButtonMenu, ButtonUser, HeaderContainer, LogoHeader, NameLogo } from './header.style'
+import { AppstoreOutlined, CloseOutlined, LoginOutlined, LogoutOutlined, MenuOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { useGlobalReducer } from '../../../store/reducers/globalReducer/useGlobalReducer'
 import { useNavigate } from 'react-router-dom'
@@ -64,11 +50,7 @@ export const Header = (props: HeaderProps) => {
   const items1: MenuProps['items'] = [
     {
       key: '1',
-      label: (
-        <span
-          style={{ color: '#1677ff', fontSize: '26px' }}
-        >{`Olá, ${userReducer?.name}!`}</span>
-      ),
+      label: <span style={{ color: '#1677ff', fontSize: '26px' }}>{`Olá, ${userReducer?.name}!`}</span>,
     },
     {
       type: 'divider',
@@ -107,78 +89,33 @@ export const Header = (props: HeaderProps) => {
       key: '2',
       label: 'Login',
       icon: <LoginOutlined />,
-      onClick: () =>
-        navigate(
-          `${loginRoutesEnum.LOGIN_URL}?from=${encodeURIComponent(location.pathname)}`
-        ),
+      onClick: () => navigate(`${loginRoutesEnum.LOGIN_URL}?from=${encodeURIComponent(location.pathname)}`),
     },
   ]
 
   return (
     <HeaderContainer>
-      <FlexContainer
-        background="#"
-        align="center"
-        style={{ maxWidth: '1216px' }}
-      >
-        <FlexContainer
-          background="#"
-          width="100%"
-          align="center"
-          justify="space-between"
-          gap="20px"
-        >
+      <FlexContainer background="#" height="#" align="center" style={{ maxWidth: '1216px' }}>
+        <FlexContainer background="#" width="100%" align="center" justify="space-between" gap="20px">
           <FlexContainer background="#" height="50px" align="center" gap="10px">
-            {props.stateMenu && (
-              <ButtonMenu
-                variant="outlined"
-                onClick={handleMenu}
-                icon={menuOpen ? <MenuOutlined /> : <CloseOutlined />}
-              />
-            )}
+            {props.stateMenu && <ButtonMenu variant="outlined" onClick={handleMenu} icon={menuOpen ? <MenuOutlined /> : <CloseOutlined />} />}
             <LogoHeader src={Logo} />
             <NameLogo>InstaBuy</NameLogo>
           </FlexContainer>
-          <FlexContainer
-            background="#"
-            height="50px"
-            justify="flex-end"
-            align="center"
-            gap="10px"
-          >
+          <FlexContainer background="#" height="50px" justify="flex-end" align="center" gap="10px">
             <Nav media="500px" maxmin="max" />
             {logged ? (
-              <>
-                <Dropdown menu={{ items: items1 }} placement="bottom">
-                  <FlexContainer
-                    align="center"
-                    gap="8px"
-                    background="#"
-                    width="32px"
-                  >
-                    <ButtonUser
-                      iconPosition="end"
-                      icon={<UserOutlined style={{ fontSize: '20px' }} />}
-                    />
-                  </FlexContainer>
-                </Dropdown>
-              </>
+              <Dropdown menu={{ items: items1 }} placement="bottom">
+                <FlexContainer align="center" gap="8px" background="#" width="32px">
+                  <ButtonUser iconPosition="end" icon={<UserOutlined style={{ fontSize: '20px' }} />} />
+                </FlexContainer>
+              </Dropdown>
             ) : (
-              <>
-                <Dropdown menu={{ items: items2 }} placement="bottom">
-                  <FlexContainer
-                    align="center"
-                    gap="8px"
-                    background="#"
-                    width="32px"
-                  >
-                    <ButtonUser
-                      iconPosition="end"
-                      icon={<UserOutlined style={{ fontSize: '20px' }} />}
-                    />
-                  </FlexContainer>
-                </Dropdown>
-              </>
+              <Dropdown menu={{ items: items2 }} placement="bottom">
+                <FlexContainer align="center" gap="8px" background="#" width="32px">
+                  <ButtonUser iconPosition="end" icon={<UserOutlined style={{ fontSize: '20px' }} />} />
+                </FlexContainer>
+              </Dropdown>
             )}
           </FlexContainer>
         </FlexContainer>

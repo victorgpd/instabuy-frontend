@@ -3,6 +3,7 @@ import styled from 'styled-components'
 interface FlexContainerProps {
   width?: string
   maxwidthcontainer?: string
+  maxheightcontainer?: string
   height?: string
   padding?: string
   background?: string
@@ -12,18 +13,13 @@ interface FlexContainerProps {
   gap?: string
   directionwrap?: 'row nowrap' | 'row wrap' | 'column nowrap' | 'column wrap'
   align?: 'flex-start' | 'center' | 'flex-end'
-  justify?:
-    | 'flex-start'
-    | 'space-around'
-    | 'space-between'
-    | 'space-evenly'
-    | 'center'
-    | 'flex-end'
+  justify?: 'flex-start' | 'space-around' | 'space-between' | 'space-evenly' | 'center' | 'flex-end'
 }
 
 export const FlexContainer = styled.div<FlexContainerProps>`
   width: ${(props) => props.width || '100%'};
   ${(props) => `max-width: ${props.maxwidthcontainer};`}
+  ${(props) => `max-height: ${props.maxheightcontainer};`}
   height: ${(props) => props.height || '100%'};
   padding: ${(props) => props.padding || '0px'};
   background: ${(props) => props.background || 'white'};
@@ -43,9 +39,7 @@ interface FlexResponsiveProps extends FlexContainerProps {
   maxmin: string
 }
 
-export const FlexContainerResponsive = styled(
-  FlexContainer
-)<FlexResponsiveProps>`
+export const FlexContainerResponsive = styled(FlexContainer)<FlexResponsiveProps>`
   @media screen and (${(props) => props.maxmin}-width: ${(props) => props.media}) {
     display: none;
   }

@@ -2,14 +2,8 @@ import { useEffect, useState } from 'react'
 import { FlexContainer } from '../../../../../shared/components/flexcontainer/flexcontainer.style'
 import Screen from '../../../../../shared/components/screen/screen'
 import Menu from '../../../../../shared/components/menu/menu'
-import Table, {
-  DataSourceType,
-} from '../../../../../shared/components/table/table'
-import {
-  fetchNewProducts,
-  fetchProducts,
-  searchProductsMlQ,
-} from '../../../../../shared/functions/connectionAPI'
+import Table, { DataSourceType } from '../../../../../shared/components/table/table'
+import { fetchNewProducts, fetchProducts, searchProductsMlQ } from '../../../../../shared/functions/connectionAPI'
 import { convertNumberToMoney } from '../../../../../shared/functions/money'
 import { useProductReducer } from '../../../../../store/reducers/productReducer/useProductReducer'
 import { Button, Select, Spin } from 'antd'
@@ -28,8 +22,7 @@ const SearchNewProduct = () => {
   const navigate = useNavigate()
   const { setNotification } = useGlobalReducer()
   const { products, setProducts } = useProductReducer()
-  const { categories, searchCategories, subCategories, searchSubCategories } =
-    useCategoriesReducer()
+  const { categories, searchCategories, subCategories, searchSubCategories } = useCategoriesReducer()
 
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(false)
@@ -45,9 +38,7 @@ const SearchNewProduct = () => {
       dataIndex: 'id',
       key: 'id',
       width: 150,
-      render: (text: string) => (
-        <span style={{ color: '#1677ff' }}>{text}</span>
-      ),
+      render: (text: string) => <span style={{ color: '#1677ff' }}>{text}</span>,
     },
     {
       title: 'Nome do Produto',
@@ -139,9 +130,7 @@ const SearchNewProduct = () => {
     setLoading(true)
     const fetchedProducts = await fetchProducts()
 
-    const allItemsPresent = fetchedProducts.filter(
-      (productor) => !products.some((product) => product.id === productor.id)
-    )
+    const allItemsPresent = fetchedProducts.filter((productor) => !products.some((product) => product.id === productor.id))
 
     if (allItemsPresent.length > 0) {
       setProducts((prevProducts) => [...prevProducts, ...allItemsPresent])
@@ -153,9 +142,7 @@ const SearchNewProduct = () => {
     setLoading(true)
     const fetchedProducts = await fetchNewProducts(category)
 
-    const allItemsPresent = fetchedProducts.filter(
-      (productor) => !products.some((product) => product.id === productor.id)
-    )
+    const allItemsPresent = fetchedProducts.filter((productor) => !products.some((product) => product.id === productor.id))
 
     if (allItemsPresent.length > 0) {
       const newData: DataSourceType[] = allItemsPresent.map((product) => ({
@@ -167,9 +154,7 @@ const SearchNewProduct = () => {
         linkOriginal: product.linkOriginal,
         linkAffiliate: '',
         price: `R$ ${convertNumberToMoney(product.price)}`,
-        priceOld: product.priceOld
-          ? `R$ ${convertNumberToMoney(product.priceOld)}`
-          : '',
+        priceOld: product.priceOld ? `R$ ${convertNumberToMoney(product.priceOld)}` : '',
         cupom: '',
       }))
 
@@ -191,10 +176,7 @@ const SearchNewProduct = () => {
   const convertCategoryIdSomeCategory = (categoryId: string) => {
     for (let category of categories) {
       for (let subCategory of subCategories) {
-        if (
-          subCategory.id == categoryId &&
-          category.id == subCategory.category_id
-        ) {
+        if (subCategory.id == categoryId && category.id == subCategory.category_id) {
           return category.id
         }
       }
@@ -208,11 +190,7 @@ const SearchNewProduct = () => {
       window.open(productSelected[0].linkOriginal)
       navigate(insertRoutesEnum.INSERT_URL, { state: { productSelected } })
     } else {
-      setNotification(
-        'Nenhum produto selecionado...',
-        'error',
-        'Selecione um produto para continuar para tela de cadastrar!'
-      )
+      setNotification('Nenhum produto selecionado...', 'error', 'Selecione um produto para continuar para tela de cadastrar!')
     }
   }
 
@@ -233,9 +211,7 @@ const SearchNewProduct = () => {
 
       const fetchedProducts = await searchProductsMlQ(search)
 
-      const allItemsPresent = fetchedProducts.filter(
-        (productor) => !products.some((product) => product.id === productor.id)
-      )
+      const allItemsPresent = fetchedProducts.filter((productor) => !products.some((product) => product.id === productor.id))
 
       if (allItemsPresent.length > 0) {
         const newData: DataSourceType[] = allItemsPresent.map((product) => ({
@@ -247,9 +223,7 @@ const SearchNewProduct = () => {
           linkOriginal: product.linkOriginal,
           linkAffiliate: '',
           price: `R$ ${convertNumberToMoney(product.price)}`,
-          priceOld: product.priceOld
-            ? `R$ ${convertNumberToMoney(product.priceOld)}`
-            : '',
+          priceOld: product.priceOld ? `R$ ${convertNumberToMoney(product.priceOld)}` : '',
           cupom: '',
         }))
         setDataSource((prevDataSource) => [...prevDataSource, ...newData])
@@ -264,74 +238,29 @@ const SearchNewProduct = () => {
   return (
     <Screen stateMenu={display} setStateMenu={setDisplay}>
       <Menu display={display} currentKey="product3" />
-      <FlexContainer
-        directionwrap="column nowrap"
-        background="#"
-        padding="15px"
-        gap="15px"
-        justify="center"
-        align="center"
-      >
-        {loading && (
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-        )}
-        <FlexContainer directionwrap="column nowrap" background="#" gap="10px">
-          <FlexContainer background="#" gap="10px" align="flex-end">
+      <FlexContainer directionwrap="column nowrap" background="#" padding="15px" gap="15px" justify="center" align="center">
+        {loading && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />}
+        <FlexContainer directionwrap="row wrap" maxheightcontainer="130px" height="#" background="#" gap="10px">
+          <FlexContainer width="400px" height="55px" background="#" gap="10px" align="flex-end">
             <FlexContainer maxwidthcontainer="300px" gap="10px" background="#">
-              <InputInsert
-                name="q"
-                title="Nome do Produto"
-                value={search}
-                onChange={(e) => handleInputChange(e)}
-                onEnter={handleSearch}
-              />
+              <InputInsert name="q" title="Nome do Produto" value={search} onChange={(e) => handleInputChange(e)} onEnter={handleSearch} />
             </FlexContainer>
             <Button onClick={handleSearch} color="primary" variant="outlined">
               Pesquisar
             </Button>
           </FlexContainer>
-          <FlexContainer background="#" gap="10px" align="flex-end">
-            <FlexContainer
-              maxwidthcontainer="300px"
-              directionwrap="column wrap"
-              gap="3px"
-              background="#"
-            >
+          <FlexContainer width="400px" background="#" height="55px" gap="10px" align="flex-end">
+            <FlexContainer maxwidthcontainer="300px" directionwrap="column nowrap" gap="3px" background="#">
               <span>Selecionar a categoria:</span>
-              <Select
-                mode="multiple"
-                allowClear
-                style={{ width: '100%' }}
-                placeholder="Selecione as categorias"
-                defaultValue={['Todas']}
-                onChange={handleChange}
-                options={options}
-              />
+              <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Selecione as categorias" defaultValue={['Todas']} onChange={handleChange} options={options} />
             </FlexContainer>
-            <Button
-              onClick={navigateInsertProduct}
-              color="primary"
-              variant="outlined"
-            >
+            <Button onClick={navigateInsertProduct} color="primary" variant="outlined">
               Adicionar
             </Button>
           </FlexContainer>
         </FlexContainer>
-        <FlexContainer
-          overflow="scroll"
-          directionwrap="column nowrap"
-          align="center"
-          padding="20px"
-          gap="10px"
-        >
-          <Table
-            width="100%"
-            height="100%"
-            maxheight="720px"
-            setProductSelected={setProductSelected}
-            dataSource={dataSource}
-            columns={columns}
-          />
+        <FlexContainer overflow="scroll" directionwrap="column nowrap" align="center" padding="20px" gap="10px">
+          <Table width="100%" height="100%" maxheight="720px" setProductSelected={setProductSelected} dataSource={dataSource} columns={columns} />
         </FlexContainer>
       </FlexContainer>
     </Screen>

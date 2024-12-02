@@ -9,4 +9,5 @@ export interface ProductType {
   store: string
   linkOriginal: string
   linkAffiliate: string
+  description?: string
 }

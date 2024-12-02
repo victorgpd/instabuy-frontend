@@ -4,7 +4,7 @@ import { Filter } from '../../../shared/components/filter/filter'
 import { FlexContainer } from '../../../shared/components/flexcontainer/flexcontainer.style'
 import Screen from '../../../shared/components/screen/screen'
 import { SearchBar } from '../../../shared/components/search/search'
-import { Spin } from 'antd'
+import { SelectProps, Spin } from 'antd'
 import { searchProductsDB } from '../../../shared/functions/connectionAPI'
 import { convertNumberToMoney } from '../../../shared/functions/money'
 import { useProductReducer } from '../../../store/reducers/productReducer/useProductReducer'
@@ -13,29 +13,32 @@ import { homeRoutesEnum } from '../../home/routes'
 import { LoadingOutlined } from '@ant-design/icons'
 import useTitle from '../../../shared/hooks/useTitle'
 import NoResults from '../../../shared/components/noresults/noresults'
+import { useCategoriesReducer } from '../../../store/reducers/categoriesReducer/useCategoryReducer'
+import { ProductType } from '../../../shared/types/ProductType'
+import { ResultTitle } from '../styles/search.style'
 
 export const SearchPage = () => {
   useTitle('Pesquisar')
-  const navigate = useNavigate()
-  const { products, setProducts } = useProductReducer()
-  const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(0)
-  const [buscar, setBuscar] = useState(true)
 
+  const navigate = useNavigate()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
-
   const q = queryParams.get('q')
+
+  const { products, setProducts } = useProductReducer()
+  const { categories, searchCategories } = useCategoriesReducer()
+
+  const [page, setPage] = useState(0)
+  const [buscar, setBuscar] = useState(true)
+  const [productFiltered, setProductFiltered] = useState<ProductType[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!q) {
       return navigate(homeRoutesEnum.HOME_URL)
     }
+    setProducts([])
   }, [])
-
-  useEffect(() => {
-    loadProducts(page)
-  }, [page])
 
   useEffect(() => {
     const item = document.querySelector('#sentinela')
@@ -54,19 +57,28 @@ export const SearchPage = () => {
     }
   }, [])
 
+  useEffect(() => {
+    loadProducts(page)
+  }, [page])
+
   const loadProducts = async (page: number) => {
     if (buscar) {
       setLoading(true)
       if (q) {
         const fetchedProducts = await searchProductsDB(q, page)
 
-        const allItemsPresent = fetchedProducts.filter(
-          (productor) =>
-            !products.some((product) => product.id === productor.id)
-        )
+        const allItemsPresent = fetchedProducts.filter((productor) => !products.some((product) => product.id === productor.id))
 
         if (allItemsPresent.length > 0) {
-          setProducts((prevProducts) => [...prevProducts, ...allItemsPresent])
+          setProducts((prevProducts) => {
+            const newProducts = fetchedProducts.filter((product) => !prevProducts.some((prevProduct) => prevProduct.id === product.id))
+            return [...prevProducts, ...newProducts]
+          })
+
+          setProductFiltered((prevFiltered) => {
+            const newFiltered = fetchedProducts.filter((product) => !prevFiltered.some((prevProduct) => prevProduct.id === product.id))
+            return [...prevFiltered, ...newFiltered]
+          })
         } else {
           setBuscar(false)
         }
@@ -78,56 +90,23 @@ export const SearchPage = () => {
   return (
     <Screen>
       <FlexContainer background="transparent" justify="center" padding="0 15px">
-        <FlexContainer
-          padding="15px 0px"
-          gap="36px"
-          background="#"
-          style={{ maxWidth: '1216px' }}
-        >
-          <Filter />
-          <FlexContainer
-            background="#"
-            width="100%"
-            gap="15px 0"
-            justify="center"
-            directionwrap="row wrap"
-            style={{ maxWidth: '930px', minWidth: '280px' }}
-          >
+        <FlexContainer padding="15px 0px" gap="30px" background="#" style={{ maxWidth: '1216px' }}>
+          <Filter products={products} setprodctfiltered={setProductFiltered} />
+          <FlexContainer background="#" width="100%" gap="15px 0" directionwrap="row wrap" style={{ maxWidth: '930px', minWidth: '280px' }}>
             <SearchBar />
-            <FlexContainer
-              background="#"
-              width="100%"
-              gap="15px 10px"
-              directionwrap="row wrap"
-              justify="center"
-            >
-              {products.length == 0 ? (
+            <ResultTitle>Resultados para a busca: {q?.toLocaleUpperCase()}</ResultTitle>
+            <FlexContainer background="#" width="100%" gap="15px 5px" directionwrap="row wrap" justify="center">
+              {productFiltered.length == 0 ? (
                 <NoResults />
               ) : (
-                products.map((item) => (
-                  <Card
-                    key={item.id}
-                    title={item.name}
-                    image={item.image}
-                    store={item.store}
-                    link={item.linkAffiliate}
-                    price={convertNumberToMoney(item.price)}
-                    priceOld={convertNumberToMoney(item.priceOld)}
-                    cupom="ESPECIAL40"
-                    storeImage="src/images/mercadolivre.png"
-                  />
+                productFiltered.map((item) => (
+                  <Card key={item.id} id={item.id} title={item.name} image={item.image} store={item.store} link={item.linkAffiliate} price={convertNumberToMoney(item.price)} priceOld={convertNumberToMoney(item.priceOld)} cupom={item.cupom} storeImage="src/images/mercadolivre.png" />
                 ))
               )}
 
-              <FlexContainer
-                id="sentinela"
-                width="100%"
-                background="#"
-              ></FlexContainer>
+              <FlexContainer height="10px" id="sentinela" width="100%" background="#"></FlexContainer>
             </FlexContainer>
-            {loading && (
-              <Spin indicator={<LoadingOutlined spin />} size="large" />
-            )}
+            {loading && <Spin indicator={<LoadingOutlined spin />} size="large" />}
           </FlexContainer>
         </FlexContainer>
       </FlexContainer>

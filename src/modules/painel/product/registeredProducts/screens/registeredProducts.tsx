@@ -3,14 +3,8 @@ import useTitle from '../../../../../shared/hooks/useTitle'
 import Screen from '../../../../../shared/components/screen/screen'
 import Menu from '../../../../../shared/components/menu/menu'
 import { FlexContainer } from '../../../../../shared/components/flexcontainer/flexcontainer.style'
-import Table, {
-  DataSourceType,
-} from '../../../../../shared/components/table/table'
-import {
-  fetchDeleteAllProducts,
-  fetchDeleteProducts,
-  fetchProducts,
-} from '../../../../../shared/functions/connectionAPI'
+import Table, { DataSourceType } from '../../../../../shared/components/table/table'
+import { fetchDeleteAllProducts, fetchDeleteProducts, fetchProducts } from '../../../../../shared/functions/connectionAPI'
 import { useProductReducer } from '../../../../../store/reducers/productReducer/useProductReducer'
 import { Button, Modal, Spin } from 'antd'
 import { convertNumberToMoney } from '../../../../../shared/functions/money'
@@ -41,9 +35,7 @@ const RegisteredProducts = () => {
       dataIndex: 'id',
       key: 'id',
       width: 150,
-      render: (text: string) => (
-        <span style={{ color: '#1677ff' }}>{text}</span>
-      ),
+      render: (text: string) => <span style={{ color: '#1677ff' }}>{text}</span>,
     },
     {
       title: 'Nome do Produto',
@@ -133,9 +125,7 @@ const RegisteredProducts = () => {
       // Atualiza o estado diretamente removendo duplicatas
       setDataSource((prevDataSource) => {
         const existingIds = new Set(prevDataSource.map((product) => product.id))
-        const newProducts = fetchedProducts.filter(
-          (product) => !existingIds.has(product.id)
-        )
+        const newProducts = fetchedProducts.filter((product) => !existingIds.has(product.id))
 
         // Mapeia os novos produtos para o formato esperado pelo `dataSource`
         const newDataSource = newProducts.map((product) => ({
@@ -147,10 +137,7 @@ const RegisteredProducts = () => {
           linkOriginal: product.linkOriginal,
           linkAffiliate: product.linkAffiliate,
           price: `R$ ${convertNumberToMoney(product.price)}`,
-          priceOld:
-            product.priceOld && product.priceOld > 0
-              ? `R$ ${convertNumberToMoney(product.priceOld)}`
-              : '',
+          priceOld: product.priceOld && product.priceOld > 0 ? `R$ ${convertNumberToMoney(product.priceOld)}` : '',
           cupom: product.cupom,
         }))
 
@@ -161,9 +148,7 @@ const RegisteredProducts = () => {
       // Opcional: Atualiza o estado global `products`, se necessário
       setProducts((prevProducts) => {
         const existingIds = new Set(prevProducts.map((product) => product.id))
-        const newProducts = fetchedProducts.filter(
-          (product) => !existingIds.has(product.id)
-        )
+        const newProducts = fetchedProducts.filter((product) => !existingIds.has(product.id))
         return [...prevProducts, ...newProducts]
       })
     } catch (error) {
@@ -179,15 +164,9 @@ const RegisteredProducts = () => {
       try {
         await fetchDeleteProducts(productSelected[0].id)
 
-        setDataSource((prevDataSource) =>
-          prevDataSource.filter(
-            (product) => product.id !== productSelected[0].id
-          )
-        )
+        setDataSource((prevDataSource) => prevDataSource.filter((product) => product.id !== productSelected[0].id))
 
-        setProducts((prevProducts) =>
-          prevProducts.filter((product) => product.id !== productSelected[0].id)
-        )
+        setProducts((prevProducts) => prevProducts.filter((product) => product.id !== productSelected[0].id))
         setNotification('Produto deletado com sucesso!', 'success')
       } catch (error) {
         setNotification('Erro ao deletar o produto...', 'error')
@@ -207,10 +186,7 @@ const RegisteredProducts = () => {
       setDataSource([])
 
       loadProducts()
-      setNotification(
-        'Todos os produtos foram deletados com sucesso!',
-        'success'
-      )
+      setNotification('Todos os produtos foram deletados com sucesso!', 'success')
     } catch (error) {
       setNotification('Erro ao deletar todos os produto...', 'error')
     } finally {
@@ -243,78 +219,35 @@ const RegisteredProducts = () => {
   return (
     <Screen stateMenu={display} setStateMenu={setDisplay}>
       <Menu display={display} currentKey="product1" />
-      <Modal
-        title="Confirmação"
-        open={isModalOpen}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-      >
+      <Modal title="Confirmação" open={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel}>
         <p>Tem certeza que deseja excluir tudo?</p>
       </Modal>
 
-      <FlexContainer
-        directionwrap="column nowrap"
-        background="#"
-        padding="15px"
-        gap="15px"
-        justify="center"
-        align="center"
-      >
-        {loading && (
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-        )}
-        <FlexContainer background="#" gap="10px 0" directionwrap="row wrap">
-          <FlexContainer
-            width="245px"
-            gap="7px"
-            background="#"
-            directionwrap="row nowrap"
-          >
+      <FlexContainer directionwrap="column nowrap" background="#" padding="15px" gap="15px" justify="center" align="center">
+        {loading && <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />}
+        <FlexContainer background="#" height="40px" gap="10px 0" directionwrap="row wrap">
+          <FlexContainer width="245px" gap="7px" background="#" directionwrap="row nowrap">
             <Button color="primary" onClick={handleUpdate} variant="outlined">
               Atualizar
             </Button>
-            <Button
-              color="primary"
-              onClick={() => navigate(insertRoutesEnum.INSERT_URL)}
-              variant="outlined"
-            >
+            <Button color="primary" onClick={() => navigate(insertRoutesEnum.INSERT_URL)} variant="outlined">
               Novo
             </Button>
-            <Button
-              onClick={handleUpdateProduct}
-              color="primary"
-              variant="outlined"
-            >
+            <Button onClick={handleUpdateProduct} color="primary" variant="outlined">
               Editar
             </Button>
           </FlexContainer>
-          <FlexContainer
-            width="190px"
-            gap="7px"
-            background="#"
-            directionwrap="row nowrap"
-          >
+          <FlexContainer width="190px" gap="7px" background="#" directionwrap="row nowrap">
             <Button color="danger" onClick={deleteProducts} variant="outlined">
               Excluir
             </Button>
-            <Button
-              onClick={deleteAllProducts}
-              color="danger"
-              variant="outlined"
-            >
+            <Button onClick={deleteAllProducts} color="danger" variant="outlined">
               Excluir Tudo
             </Button>
           </FlexContainer>
         </FlexContainer>
         <FlexContainer overflow="scroll" padding="20px">
-          <Table
-            width="100%"
-            height="100%"
-            maxheight="750px"
-            setProductSelected={setProductSelected}
-            dataSource={dataSource}
-            columns={columns}
-          />
+          <Table width="100%" height="100%" maxheight="750px" setProductSelected={setProductSelected} dataSource={dataSource} columns={columns} />
         </FlexContainer>
       </FlexContainer>
     </Screen>

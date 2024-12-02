@@ -8,13 +8,7 @@ interface NavProps {
 
 const Nav = (props: NavProps) => {
   return (
-    <FlexContainerResponsive
-      width="233px"
-      align="center"
-      background="#"
-      maxmin={props.maxmin}
-      media={props.media}
-    >
+    <FlexContainerResponsive width="233px" height="35px" align="center" background="#" maxmin={props.maxmin} media={props.media}>
       <NavHeaderContainer>
         <StyledHeaderLink href="/">Home</StyledHeaderLink>
         <StyledHeaderLink href="/">Cupons</StyledHeaderLink>

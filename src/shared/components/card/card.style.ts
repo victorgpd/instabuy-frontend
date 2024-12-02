@@ -12,7 +12,7 @@ export const ContainerCard = styled.div`
   flex-flow: column nowrap;
   align-items: center;
 
-  flex: 0 1 225px;
+  flex: 1 1 225px;
 `
 
 export const ImageProduct = styled.img`
@@ -61,7 +61,7 @@ export const CupomProduct = styled.span`
 `
 
 export const CoinText = styled.span`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #e0a800;
 `

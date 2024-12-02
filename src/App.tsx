@@ -10,11 +10,12 @@ import { dashboardScreensRoutes } from './modules/painel/dashboard/routes'
 import { registeredProductsScreensRoutes } from './modules/painel/product/registeredProducts/routes'
 import { searchNewProductsScreensRoutes } from './modules/painel/product/searchNewProduct/routes'
 import { updateScreensRoutes } from './modules/painel/product/updateProduct/routes'
+import { productScreensRoutes } from './modules/product/routes'
 
 function App() {
   const { contextHolder } = useNotification()
 
-  const routes: RouteObject[] = [...homeScreensRoutes, ...searchScreensRoutes, ...loginScreensRoutes]
+  const routes: RouteObject[] = [...homeScreensRoutes, ...searchScreensRoutes, ...loginScreensRoutes, ...productScreensRoutes]
   const routesLoggedIn: RouteObject[] = [...dashboardScreensRoutes, ...registeredProductsScreensRoutes, ...insertScreensRoutes, ...searchNewProductsScreensRoutes, ...updateScreensRoutes].map((route) => ({
     ...route,
     loader: verifyLoggedIn,

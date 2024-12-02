@@ -158,3 +158,13 @@ export async function fetchUpdateProduct(product: ProductType) {
     console.log(error)
   }
 }
+
+export async function fetchSearchProductId(id: string) {
+  try {
+    const response = await axios.get(`https://backend-instabuy-7i9x.vercel.app/api/products/searchid?id=${id}`)
+
+    return response.data.product
+  } catch (error) {
+    console.log(error)
+  }
+}

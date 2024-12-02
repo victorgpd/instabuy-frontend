@@ -49,9 +49,7 @@ export const CarouselTrack = styled.ul<{ slidestoshow: number }>`
 
   > * {
     flex: 0 0 auto; /* Evita que os itens encolham */
-    max-width: calc(
-      100% / ${({ slidestoshow }) => slidestoshow}
-    ); /* Garantindo que os itens não estiquem */
+    max-width: calc(100% / ${({ slidestoshow }) => slidestoshow}); /* Garantindo que os itens não estiquem */
     box-sizing: border-box;
   }
 `

@@ -1,14 +1,8 @@
 import { useEffect, useState } from 'react'
-import {
-  setAuthorizationToken,
-  verifyLoggedInLogin,
-} from '../../../shared/functions/auth'
+import { setAuthorizationToken, verifyLoggedInLogin } from '../../../shared/functions/auth'
 import Screen from '../../../shared/components/screen/screen'
 import { FlexContainer } from '../../../shared/components/flexcontainer/flexcontainer.style'
-import {
-  InputInsert,
-  statusType,
-} from '../../../shared/components/inputs/inputInsert/inputInsert'
+import { InputInsert, statusType } from '../../../shared/components/inputs/inputInsert/inputInsert'
 import { InputPassword } from '../../../shared/components/inputs/inputPassword/inputPassword'
 import { Button } from 'antd'
 import { LoginOutlined } from '@ant-design/icons'
@@ -75,11 +69,7 @@ const Login = () => {
         }
       })
       .catch(() => {
-        setNotification(
-          'Falha no login...',
-          'error',
-          'Usuário ou senha invalido!'
-        )
+        setNotification('Falha no login...', 'error', 'Usuário ou senha invalido!')
         setStatus({
           username: 'error',
           password: 'error',
@@ -95,45 +85,12 @@ const Login = () => {
   return (
     <Screen>
       <FlexContainer background="transparent" justify="center">
-        <FlexContainer
-          background="#"
-          padding="40px 20px"
-          width="100%"
-          height="100%"
-          directionwrap="column nowrap"
-          gap="15px"
-          justify="center"
-          style={{ maxWidth: '300px', minHeight: '400px' }}
-        >
-          <FlexContainer
-            background="#"
-            gap="15px"
-            directionwrap="column nowrap"
-          >
-            <InputInsert
-              name="username"
-              title="E-mail"
-              value={user.username}
-              onChange={(e) => handleInputChange(e)}
-              onEnter={handleEnterPress}
-              status={status.username}
-            />
-            <InputPassword
-              name="password"
-              title="Senha"
-              value={user.password}
-              onChange={(e) => handleInputChange(e)}
-              onEnter={handleEnterPress}
-              status={status.password}
-            />
+        <FlexContainer background="#" padding="40px 20px" width="100%" height="100%" directionwrap="column nowrap" gap="15px" justify="flex-start" style={{ maxWidth: '300px', minHeight: '400px' }}>
+          <FlexContainer background="#" height="130px" gap="15px" directionwrap="column nowrap">
+            <InputInsert name="username" title="E-mail" value={user.username} onChange={(e) => handleInputChange(e)} onEnter={handleEnterPress} status={status.username} />
+            <InputPassword name="password" title="Senha" value={user.password} onChange={(e) => handleInputChange(e)} onEnter={handleEnterPress} status={status.password} />
           </FlexContainer>
-          <Button
-            loading={loading}
-            type="primary"
-            icon={<LoginOutlined />}
-            style={{ width: '100%' }}
-            onClick={handleLogin}
-          >
+          <Button loading={loading} type="primary" icon={<LoginOutlined />} style={{ width: '100%' }} onClick={handleLogin}>
             Entrar
           </Button>
         </FlexContainer>

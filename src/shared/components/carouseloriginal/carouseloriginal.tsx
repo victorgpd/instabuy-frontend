@@ -1,13 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {
-  CarouselContainer,
-  CarouselButton,
-  CarouselTrackContainer,
-  CarouselTrack,
-  CarouselSlide,
-  CarouselIndicators,
-  CarouselIndicator,
-} from './carouseloriginal.style'
+import { CarouselContainer, CarouselButton, CarouselTrackContainer, CarouselTrack, CarouselSlide, CarouselIndicators, CarouselIndicator } from './carouseloriginal.style'
 
 interface CarouselOriginalProps {
   children: React.ReactNode
@@ -16,12 +8,7 @@ interface CarouselOriginalProps {
   autoplayInterval?: number
 }
 
-const CarouselOriginal: React.FC<CarouselOriginalProps> = ({
-  children,
-  slidesToShow = 1,
-  autoplay = false,
-  autoplayInterval = 3000,
-}) => {
+const CarouselOriginal: React.FC<CarouselOriginalProps> = ({ children, slidesToShow = 1, autoplay = false, autoplayInterval = 3000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const trackRef = useRef<HTMLUListElement>(null)
@@ -69,16 +56,11 @@ const CarouselOriginal: React.FC<CarouselOriginalProps> = ({
     }
   }, [isTransitioning])
 
-  // Cálculo do índice do indicador
   const indicatorIndex = Math.floor(currentIndex / slidesToShow)
 
   return (
     <CarouselContainer>
-      <CarouselButton
-        className="prev"
-        onClick={handlePrev}
-        disabled={currentIndex <= 0}
-      >
+      <CarouselButton className="prev" onClick={handlePrev} disabled={currentIndex <= 0}>
         ‹
       </CarouselButton>
       <CarouselTrackContainer>
@@ -95,23 +77,13 @@ const CarouselOriginal: React.FC<CarouselOriginalProps> = ({
           ))}
         </CarouselTrack>
       </CarouselTrackContainer>
-      <CarouselButton
-        className="next"
-        onClick={handleNext}
-        disabled={currentIndex >= totalSlides - slidesToShow}
-      >
+      <CarouselButton className="next" onClick={handleNext} disabled={currentIndex >= totalSlides - slidesToShow}>
         ›
       </CarouselButton>
       <CarouselIndicators>
-        {Array.from({ length: Math.ceil(totalSlides / slidesToShow) }).map(
-          (_, index) => (
-            <CarouselIndicator
-              key={index}
-              active={index === indicatorIndex}
-              onClick={() => handleIndicatorClick(index)}
-            />
-          )
-        )}
+        {Array.from({ length: Math.ceil(totalSlides / slidesToShow) }).map((_, index) => (
+          <CarouselIndicator key={index} active={index === indicatorIndex} onClick={() => handleIndicatorClick(index)} />
+        ))}
       </CarouselIndicators>
     </CarouselContainer>
   )
