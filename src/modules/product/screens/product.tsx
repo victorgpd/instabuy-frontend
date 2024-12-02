@@ -91,10 +91,10 @@ const Product = () => {
         <FlexContainer style={{ borderRadius: '4px' }} align="center" height="#" gap="30px" maxwidthcontainer="870px" padding="15px" directionwrap="column nowrap">
           <DescriptionTitleText>Descrição do Produto</DescriptionTitleText>
           <FlexContainer directionwrap="column nowrap" gap="10px">
-            {descriptionsParts.slice(0, isExpanded ? descriptionsParts.length : 12).map((item, index) => (
+            {descriptionsParts.slice(0, isExpanded ? descriptionsParts.length : 6).map((item, index) => (
               <DescriptionProductText key={index}>{item}</DescriptionProductText>
             ))}
-            {descriptionsParts.length > 12 && (
+            {descriptionsParts.length > 6 && (
               <FlexContainer justify="center">
                 <Button onClick={toggleDescription} type="link">
                   {isExpanded ? 'Mostrar menos' : 'Mostrar mais'}
