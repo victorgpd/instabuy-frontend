@@ -4,6 +4,7 @@ import { CoinText, ContainerCard, ContainerCupom, CupomProduct, ImageProduct, Pr
 import { faTicket } from '@fortawesome/free-solid-svg-icons'
 import { Button } from 'antd'
 import { LinkOutlined } from '@ant-design/icons'
+import MercadoLivre from '../../../images/mercadolivre.png'
 
 interface CardProps {
   id: string
@@ -68,7 +69,7 @@ export const Card = (props: CardProps) => {
       </FlexContainer>
 
       <FlexContainer height="54px" gap="5px" justify="center" align="center" padding="12px" style={{ borderTop: '2px solid rgb(242, 244, 246)' }}>
-        <StoreImage src={props.storeImage} />
+        <StoreImage src={MercadoLivre} />
         <StoreText>{props.store}</StoreText>
       </FlexContainer>
     </ContainerCard>
